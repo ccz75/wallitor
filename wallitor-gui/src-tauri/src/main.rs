@@ -4,7 +4,8 @@
 mod setup;
 
 fn main() {
-  tauri::Builder::default().setup(setup::init)
+  tauri::Builder::default()
+    .setup(setup::init)
     .invoke_handler(tauri::generate_handler![test_command])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
