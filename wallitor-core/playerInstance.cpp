@@ -59,13 +59,14 @@ BOOL playerInstance::showWindow(LPCWSTR lpParameter) {
 	PROCESS_INFORMATION pi{ 0 };
 	if (CreateProcess(this->config.ffpath.c_str(), (LPWSTR)lpParameter, 0, 0, 0, CREATE_NO_WINDOW, 0, 0, &si, &pi)) {
 		//Sleep(600);//等待视频播放器启动完成
-		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 		//HWND hProgman = FindWindow(L"Progman", 0);// 找到PI窗口
 		HWND hProgman = findWindowTimeOut(L"Progman",2000);
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 		if (hProgman == nullptr) return FALSE;
 		SendMessageTimeout(hProgman, 0x052c, 0, 0, 0, 300, 0);// 给它发特殊消息
 		//this->hFfplay = FindWindowW(L"SDL_app", 0);// 找到视频窗口
 		this->hFfplay = findWindowTimeOut(L"SDL_app", 2000);
+		std::this_thread::sleep_for(std::chrono::milliseconds(300));
 		if (this->hFfplay == nullptr) return FALSE;
 		SetParent(hFfplay, hProgman);// 将视频窗口设苦为PM的子窗口
 		int systemWidth = GetSystemMetrics(0);

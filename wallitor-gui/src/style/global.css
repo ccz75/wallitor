@@ -1,0 +1,42 @@
+.colbox{
+    display: flex;
+    flex-direction: row;
+}
+
+.rowbox{
+    display: flex;
+    flex-direction: column;
+}
+
+html {
+    --text-shadow-color: #b3b3b3ae;
+    --bg-color-solid: #fcfcfc;
+    --bg-color-alter: #ffffff;
+    --bg-color: #ffffffae;
+    --text-color: #1c1c1c;
+    --bd-color: #bbbbbbce;
+    --login-button-bg: #9acdff;
+    --login-button-bd: #c8c8c8;
+    --login-button-hover: #7db7f0;
+    --branch-viewing-color: rgb(122, 212, 215);
+    --branch-viewing-hover-color: rgb(102, 177, 180);
+    --delete-box-left-border: #f56c6c;
+    --delete-box-bg: #f56c6c42;
+    --delete-box-title: #511f1f;
+    --delete-box-text: black;
+}
+
+html.dark {
+    --text-shadow-color: #686868af;
+    --bg-color-solid: #191919;
+    --bg-color-alter: #2d2d2d;
+    --bg-color: #2a2a2ace;
+    --text-color: #c0c0c0;
+    --bd-color: #7f7f7f7c;
+    --titlebar-height: 40px;
+    --shadow-edge-glow: inset 1px 1px 1px -.5px rgba(255, 255, 255, .12), inset -1px -1px 1px -.5px rgba(255, 255, 255, .04), inset 0 0 4px rgba(255, 255, 255, .06);
+    --shadow: 0 10px 15px -3px rgb(0 0 0 / .2), 0 4px 6px -4px rgb(0 0 0 / .16);
+    --bg-color-alpha: hsl(230 12% 14% / .68);
+    --bg-hover-fill: rgb(131 131 145 / 24%);
+    --bg-hover-fill-close: rgba(211, 86, 86, 0.579);
+}

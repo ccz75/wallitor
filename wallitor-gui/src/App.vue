@@ -1,48 +1,28 @@
 <script setup lang="ts">
+import TitleBar from './components/TitleBar.vue';
 import { RouterLink, RouterView } from 'vue-router'
-import {invoke} from "@tauri-apps/api"
-import { appWindow } from '@tauri-apps/api/window'
-import SvgIcon from './components/SvgIcon.vue';
-import {ref} from 'vue'
+import { invoke } from "@tauri-apps/api"
 
-const maximized = ref(false);
+const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)");
+const html_node = document.getElementsByTagName("html")[0]
+if (isDarkTheme.matches) html_node.classList.add("dark")
+isDarkTheme.addEventListener('change', (event) => {
+  if (event.matches) {
+    html_node.classList.add("dark")
+  } else {
+    html_node.classList.remove("dark")
+  }
+});
 
-function minimize(){
-  appWindow.minimize()
-}
-
-function toggleMaximize(){
-  appWindow.toggleMaximize();
-  maximized.value = !maximized.value;
-}
-
-function close(){
-  appWindow.close()
-}
 </script>
 
 <template>
-  <div data-tauri-drag-region class="titlebar">
-  <div class="titlebar-button" id="titlebar-minimize" @click="minimize">
-    <svg-icon name="window-minimize" color="red"></svg-icon>
-  </div>
-  <div class="titlebar-button" id="titlebar-maximize" @click="toggleMaximize">
-    <template v-if="maximized">
-      <svg-icon name="window-maximized"></svg-icon>
-    </template>
-    <template v-else>
-      <svg-icon name="window-maximize" width="13px"></svg-icon>
-    </template>
-  </div>
-  <div class="titlebar-button" id="titlebar-close" @click="close">
-    <svg-icon name="window-close"></svg-icon>
-  </div>
-</div>
+  <title-bar mode="win"></title-bar>
   <router-view></router-view>
 </template>
 
 <style>
-html{
+html {
   background: transparent;
   width: 100%;
   height: 100%;
@@ -50,39 +30,19 @@ html{
   padding: 0;
   overflow: hidden;
 }
-body{
+
+body {
   width: 100%;
   height: 100%;
   margin: 0;
   padding: 0;
   overflow: hidden;
 }
-#app{
+
+#app {
   width: 100%;
   height: 100%;
   position: relative;
   overflow: hidden;
-}
-</style>
-<style scoped>
-.titlebar {
-  height: 30px;
-  background: #141414;
-  user-select: none;
-  display: flex;
-  justify-content: flex-end;
-  top: 0;
-  left: 0;
-  right: 0;
-}
-.titlebar-button {
-  display: inline-flex;
-  justify-content: center;
-  align-items: center;
-  width: 30px;
-  height: 30px;
-}
-.titlebar-button:hover {
-  background: #5bbec3;
 }
 </style>
