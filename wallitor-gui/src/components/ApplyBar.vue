@@ -115,7 +115,6 @@ function open(conFig: Config) {
 
 .apply-bar-bg {
     border: solid var(--bd-color) 1px;
-    border: solid 1px var(--bd-color);
     backdrop-filter: blur(30px) saturate(180%);
     box-shadow: var(--shadow-edge-glow), var(--shadow);
     background-color: var(--bg-color-alpha-darker);

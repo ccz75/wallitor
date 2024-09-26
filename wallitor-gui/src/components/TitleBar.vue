@@ -28,24 +28,24 @@
       <div class="titlebar-button-wrapper colbox">
         <div class="titlebar-button" id="titlebar-minimize" @click="minimize">
           <div class="titlebar-button-rect">
-            <svg-icon name="window-minimize" :width="button_size_default" :height="button_size_default"></svg-icon>
+            <svg-icon name="window-minimize" :size="button_size_default"></svg-icon>
           </div>
         </div>
         <div class="titlebar-button" id="titlebar-maximize" @click="toggleMaximize">
           <template v-if="maximized">
             <div class="titlebar-button-rect">
-              <svg-icon name="window-maximized" :width="button_size_alter" :height="button_size_alter"></svg-icon>
+              <svg-icon name="window-maximized" :size="button_size_alter"></svg-icon>
             </div>
           </template>
           <template v-else>
             <div class="titlebar-button-rect">
-              <svg-icon name="window-maximize" :width="button_size_alter" :height="button_size_alter"></svg-icon>
+              <svg-icon name="window-maximize" :size="button_size_alter"></svg-icon>
             </div>
           </template>
         </div>
         <div class="titlebar-button" id="titlebar-close" @click="close">
           <div class="titlebar-button-rect">
-            <svg-icon name="window-close" :width="button_size_default" :height="button_size_default"></svg-icon>
+            <svg-icon name="window-close" :size="button_size_default"></svg-icon>
           </div>
         </div>
       </div>
@@ -106,12 +106,12 @@ function close() {
 
 .titlebar-icon-title {
   font-weight: 500;
-  font-size: 20px;
+  font-size: 23px;
   margin-left: 10px;
 }
 
 .titlebar-icon {
-  height: calc(var(--titlebar-height) - 10px);
+  height: var(--titlebar-height);
 }
 
 .titlebar-button-wrapper {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ItemCard from '@/components/ItemCard.vue';
 import ApplyBar from '@/components/ApplyBar.vue';
+import AddItem from '@/components/AddItem.vue';
 import { ref, onMounted } from 'vue';
 import { entry } from '@/ts/entry';
 interface Config {
@@ -16,6 +17,7 @@ const items = ref<Config[]>([{
 }])
 const apply_bar_visible = ref(false);
 const applyBar = ref<InstanceType<typeof ApplyBar> | null>(null);
+const item_add_visible = ref(false);
 
 onMounted(() => {
   const main = document.querySelector(".home-main") as HTMLElement;
@@ -34,6 +36,7 @@ function openCard(config: Config) {
     <ItemCard v-for="(item, index) in items" :key="index" :config="item" @click="openCard(item)"></ItemCard>
   </main>
   <ApplyBar v-model="apply_bar_visible" ref="applyBar"></ApplyBar>
+  <AddItem v-model="item_add_visible"></AddItem>
 </template>
 
 <style>
