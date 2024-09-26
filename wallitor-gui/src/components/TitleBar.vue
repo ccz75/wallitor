@@ -57,7 +57,8 @@
 import SvgIcon from '@/components/SvgIcon.vue';
 import { ref, defineProps } from 'vue'
 import type { PropType } from 'vue'
-import { appWindow } from '@tauri-apps/api/window'
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+const appWindow = getCurrentWebviewWindow();
 
 type Mode = "win" | "mac";
 
@@ -72,6 +73,7 @@ const props = defineProps({
 })
 
 function minimize() {
+  console.log(111)
   appWindow.minimize()
 }
 
@@ -114,13 +116,13 @@ function close() {
 
 .titlebar-button-wrapper {
   height: var(--titlebar-height);
-  border-radius: var(--titlebar-height);
-  border: solid 1px var(--bd-color);
   width: fit-content;
   place-self: center;
   place-items: center;
   overflow: hidden;
-  backdrop-filter: blur(20px) saturate(180%);
+  border-radius: var(--titlebar-height);
+  border: solid 1px var(--bd-color);
+  backdrop-filter: blur(10px) saturate(180%);
   box-shadow: var(--shadow-edge-glow), var(--shadow);
   background-color: var(--bg-color-alpha);
 }

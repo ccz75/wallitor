@@ -20,29 +20,3 @@ isDarkTheme.addEventListener('change', (event) => {
   <title-bar mode="win"></title-bar>
   <router-view></router-view>
 </template>
-
-<style>
-html {
-  background: transparent;
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-body {
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
-
-#app {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-}
-</style>

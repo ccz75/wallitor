@@ -37,6 +37,31 @@ html.dark {
     --shadow-edge-glow: inset 1px 1px 1px -.5px rgba(255, 255, 255, .12), inset -1px -1px 1px -.5px rgba(255, 255, 255, .04), inset 0 0 4px rgba(255, 255, 255, .06);
     --shadow: 0 10px 15px -3px rgb(0 0 0 / .2), 0 4px 6px -4px rgb(0 0 0 / .16);
     --bg-color-alpha: hsl(230 12% 14% / .68);
+    --bg-color-alpha-darker: hsl(230 12% 14% / .93);
     --bg-hover-fill: rgb(131 131 145 / 24%);
     --bg-hover-fill-close: rgba(211, 86, 86, 0.579);
 }
+
+html {
+    background: transparent;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  #app {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+  }
