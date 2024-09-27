@@ -4,6 +4,7 @@ import ApplyBar from '@/components/ApplyBar.vue';
 import AddItem from '@/components/AddItem.vue';
 import { ref, onMounted } from 'vue';
 import { entry } from '@/ts/entry';
+import { invoke } from '@tauri-apps/api/core';
 interface Config {
   name: string,
   img: string
@@ -24,6 +25,7 @@ onMounted(() => {
   setTimeout(() => {
     entry("up", main, 20);
   })
+  invoke("read_resource_dir", {}).then((res) => console.log(res));
 })
 
 function openCard(config: Config) {

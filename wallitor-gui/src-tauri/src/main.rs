@@ -12,6 +12,7 @@ fn main() {
   tauri::Builder::default()
     .setup(setup::init)
     .invoke_handler(tauri::generate_handler![test_command])
+    .invoke_handler(tauri::generate_handler![read_resource_dir])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
@@ -24,8 +25,10 @@ async fn test_command() -> String {
 
 #[tauri::command]
 async fn read_resource_dir() -> String {
-  let mut file_map = reader::FileMap::new();
+  let file_map = reader::FileMap::new();
   let path = Path::new("./resource");
-  fs::exists(path).is_err_and(|_|{fs::create_dir(path);return true;});
+  if let Ok(false) = fs::exists(path){
+    fs::create_dir(path).expect("Can't create dir");
+  }
   serde_json::to_string(&file_map).unwrap()
 }
