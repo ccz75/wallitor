@@ -11,6 +11,7 @@ pub fn run() {
   tauri::Builder::default()
     .setup(setup::init)
     .plugin(tauri_plugin_fs::init())
+    .plugin(tauri_plugin_dialog::init())
     .invoke_handler(tauri::generate_handler![read_resource_dir,get_file])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");

@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="apply-bar-button">应用</button>
+                <button class="apply-button">应用</button>
             </div>
             <div class="apply-bar-close" @click="handleClose">
                 <svg-icon name="close" color="var(--text-color)"></svg-icon>
@@ -225,27 +225,5 @@ function open(conFig: Cell) {
 .apply-bar-info-main {
     font-size: 15px;
     font-weight: 500;
-}
-
-.apply-bar-button {
-    align-self: flex-end;
-    outline: none;
-    border: solid 1px var(--bd-color);
-    border-radius: 2px;
-    width: 75px;
-    height: 30px;
-    background-color: var(--bg-color-alpha-darker);
-    color: var(--text-color);
-    cursor: pointer;
-    transition: .3s;
-}
-
-.apply-bar-button:hover {
-    background-color: var(--bg-color-alter);
-}
-
-.apply-bar-button:active {
-    background-color: var(--bg-color-solid);
-    transform: scale(0.95);
 }
 </style>

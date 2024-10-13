@@ -73,7 +73,6 @@ const props = defineProps({
 })
 
 function minimize() {
-  console.log(111)
   appWindow.minimize()
 }
 
