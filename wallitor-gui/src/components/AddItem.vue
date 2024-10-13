@@ -18,37 +18,39 @@
             </header>
             <main class="item-add-main">
                 <table class="item-add-form">
-                    <tr>
-                        <td class="item-add-form-title">标题</td>
-                        <td><input type="text" v-model="addInfo.name" /></td>
-                    </tr>
-                    <tr>
-                        <td class="item-add-form-title">文件</td>
-                        <td>
-                            <template v-if="image_src">
-                                <img :src="image_src" class="item-add-image">
-                            </template>
-                            <template v-else>
-                                <div class="item-add-preview" @click="selectPreview">
-                                    <div class="item-add-preview-text">
-                                        <SvgIcon name="add" size="20px"></SvgIcon>点击添加封面
+                    <tbody>
+                        <tr>
+                            <td class="item-add-form-title">标题</td>
+                            <td><input type="text" v-model="addInfo.name" /></td>
+                        </tr>
+                        <tr>
+                            <td class="item-add-form-title">文件</td>
+                            <td>
+                                <template v-if="image_src">
+                                    <img :src="image_src" class="item-add-image" @click="selectPreview">
+                                </template>
+                                <template v-else>
+                                    <div class="item-add-preview" @click="selectPreview">
+                                        <div class="item-add-preview-text">
+                                            <SvgIcon name="add" size="20px"></SvgIcon>点击添加封面
+                                        </div>
                                     </div>
+                                </template>
+                                <div class="colbox">
+                                    <button class="apply-button" @click="selectMedia">选择</button>
+                                    <div>{{ addInfo.media }}</div>
                                 </div>
-                            </template>
-                            <div class="colbox">
-                                <button class="apply-button" @click="selectMedia">选择</button>
-                                <div>{{ addInfo.media }}</div>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="item-add-form-title">描述</td>
-                        <td><textarea class="item-add-description" v-model="addInfo.description"></textarea></td>
-                    </tr>
-                    <tr>
-                        <td></td>
-                        <td><button class="apply-button" @click="handleFileOpen">添加</button></td>
-                    </tr>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="item-add-form-title">描述</td>
+                            <td><textarea class="item-add-description" v-model="addInfo.description"></textarea></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td><button class="apply-button" @click="handleAdd">添加</button></td>
+                        </tr>
+                    </tbody>
                 </table>
             </main>
         </div>
@@ -111,6 +113,14 @@ function selectPreview() {
                 image_src.value = imageUrl;
             })
         }
+    })
+}
+
+function handleAdd() {
+    invoke("new_wallpaper", {
+        info: addInfo.value
+    }).then((res) => {
+        console.log(res);
     })
 }
 </script>
@@ -208,6 +218,11 @@ function selectPreview() {
     width: 400px;
     margin-bottom: 10px;
     box-shadow: var(--shadow-edge-glow);
+    cursor: pointer;
+}
+
+.item-add-image:active {
+    transform: scale(0.95);
 }
 
 .item-add-form {
