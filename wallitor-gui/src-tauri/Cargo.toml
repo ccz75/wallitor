@@ -5,6 +5,7 @@ description = "A Tauri App"
 authors = ["you"]
 edition = "2021"
 
+
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [lib]
@@ -15,7 +16,7 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 tauri-build = { version = "2.0.0-rc", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.0-rc", features = [] }
+tauri = { version = "2.0.0-rc", features = ["unstable"] }
 tauri-plugin-shell = "2.0.0-rc"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
@@ -23,4 +24,5 @@ window-vibrancy = "0.5.2"
 tauri-plugin-fs = "2.0.0-rc"
 tauri-plugin-dialog = "2.0.0-rc"
 chrono = "0.4.38"
+libloading = "0.8.5"
 

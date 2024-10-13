@@ -38,8 +38,8 @@ html.dark {
   --shadow-edge-glow: inset 1px 1px 1px -0.5px rgba(255, 255, 255, 0.12),
     inset -1px -1px 1px -0.5px rgba(255, 255, 255, 0.04), inset 0 0 4px rgba(255, 255, 255, 0.06);
   --shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.16);
-  --bg-color-alpha: hsl(230 12% 14% / 0.68);
-  --bg-color-alpha-darker: hsl(230 12% 14% / 0.93);
+  --bg-color-alpha: hsla(240, 1%, 14%, 0.68);
+  --bg-color-alpha-darker: hsla(0, 0%, 14%, 0.948);
   --bg-hover-fill: rgb(131 131 145 / 24%);
   --bg-hover-fill-close: rgba(211, 86, 86, 0.579);
 }

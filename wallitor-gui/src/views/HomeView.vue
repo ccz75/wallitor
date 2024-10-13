@@ -2,62 +2,23 @@
 import ItemCard from '@/components/ItemCard.vue';
 import ApplyBar from '@/components/ApplyBar.vue';
 import AddItem from '@/components/AddItem.vue';
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { entry } from '@/ts/entry';
-import { invoke } from '@tauri-apps/api/core';
-import type { wpConfig, Cell } from '@/ts/types'
+import type { Cell } from '@/ts/types'
+import { useStore } from 'vuex';
 
-const items = ref<Cell[]>([])
+const store = useStore();
+const items = computed<Cell[]>(()=>store.state.wpList);
 const apply_bar_visible = ref(false);
 const applyBar = ref<InstanceType<typeof ApplyBar> | null>(null);
 const item_add_visible = ref(false);
-
-interface Resource {
-  "config.json": string,
-  [filename: string]: string
-}
-
-interface ResourceDir {
-  files: {
-    [resId: string]: Resource
-  }
-}
-
-function arrayBufferToString(buffer: ArrayBuffer): string {
-  const decoder = new TextDecoder('utf-8');
-  return decoder.decode(buffer);
-}
 
 onMounted(() => {
   const main = document.querySelector(".home-main") as HTMLElement;
   setTimeout(() => {
     entry("up", main, 20);
   })
-  invoke("read_resource_dir", {}).then((res) => {
-    let resource = JSON.parse(res as string) as ResourceDir;
-    for (let id of Object.keys(resource.files)) {
-      let dir = resource.files[id]
-      if ("preview.jpg" in dir) {
-        invoke("get_file", {
-          path: dir["preview.jpg"]
-        }).then((res) => {
-          let binary_data_arr = new Uint8Array(res as number[]);
-          const blob = new Blob([binary_data_arr], { type: 'image/jpeg' });
-          const imageUrl = URL.createObjectURL(blob);
-          invoke("get_file", {
-            path: `${id}\\config.json`
-          }).then((cfg) => {
-            let config: wpConfig = JSON.parse(arrayBufferToString(cfg as ArrayBuffer));
-            items.value.push({
-              path: id,
-              img: imageUrl,
-              config: config
-            })
-          })
-        })
-      }
-    }
-  });
+ store.commit("getWpList");
 })
 
 function openCard(config: Cell) {

@@ -7,6 +7,8 @@ use std::path::Path;
 use tauri::ipc::Response;
 use serde::{Deserialize,Serialize};
 use chrono::Local;
+use libloading::{Library,Symbol};
+use std::ffi::CString;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -14,7 +16,7 @@ pub fn run() {
     .setup(setup::init)
     .plugin(tauri_plugin_fs::init())
     .plugin(tauri_plugin_dialog::init())
-    .invoke_handler(tauri::generate_handler![read_resource_dir,get_file,new_wallpaper])
+    .invoke_handler(tauri::generate_handler![read_resource_dir,get_file,new_wallpaper,set_wallpaper])
     .run(tauri::generate_context!())
     .expect("error while running tauri application");
 }
@@ -53,7 +55,8 @@ struct AddInfo {
 struct Info{
   media_type:String,
   description:String,
-  created:i64
+  created:i64,
+  entry_point:String
 }
 
 #[derive(Serialize)]
@@ -83,14 +86,6 @@ async fn new_wallpaper(info:AddInfo) -> String{
   if fs::copy(Path::new(&info.preview), Path::new(&format!("{}/preview.jpg",folder))).is_err(){
     return String::from("Error copy image.");
   }
-  let config =json!( Config{
-    name:info.name,
-    info:Info { media_type: String::from("video"), description: info.description, created: current_time},
-    option:Opt{mute:true}
-  });
-  if fs::write(Path::new(&format!("{}/config.json",folder)), config.to_string()).is_err(){
-    return String::from("Error write config.");
-  }
   if fs::create_dir(Path::new(&format!("{}/res",folder))).is_err(){
     return String::from("Error creating res folder.");
   }
@@ -99,9 +94,34 @@ async fn new_wallpaper(info:AddInfo) -> String{
     if fs::copy(Path::new(&info.media), Path::new(&format!("{}/res/{}",folder,filename))).is_err(){
       return String::from("Error copy media.");
     }
+    let config =json!( Config{
+      name:info.name,
+      info:Info { media_type: String::from("video"), description: info.description, created: current_time,entry_point:String::from(filename)},
+      option:Opt{mute:true}
+    });
+    if fs::write(Path::new(&format!("{}/config.json",folder)), config.to_string()).is_err(){
+      return String::from("Error write config.");
+    }
   }
   else{
     return String::from("Invalid media path.");
   }
   String::from("Success")
+}
+
+#[tauri::command]
+async fn set_wallpaper(title:String)->bool{
+  let lib = unsafe {
+      Library::new("wallitor-core.dll").unwrap()
+  };
+  type SetFn = unsafe extern "C" fn(*const i8)->i8;
+  let set:Symbol<SetFn> = unsafe {
+      lib.get(b"set_wallpaper\0").unwrap()
+  };
+  let title = CString::new(title.to_string()).unwrap();
+  unsafe {
+    let res = set(title.as_ptr());
+    if res == 0 {return false;};
+  }
+  return true;
 }

@@ -4,7 +4,7 @@
     }">
         <div class="item-add-content">
             <header class="colbox item-add-header">
-                <div class="colbox item-add-header-icon item-add-header-item" @click="visible = !visible">
+                <div class="colbox item-add-header-icon item-add-header-item" @click="toggleVisible">
                     <template v-if="visible">
                         <SvgIcon name="keyboard-arrow-down" size="20px"></SvgIcon>
                     </template>
@@ -62,6 +62,10 @@ import { defineExpose, defineModel, ref } from 'vue';
 import SvgIcon from './SvgIcon.vue';
 import { open } from '@tauri-apps/plugin-dialog';
 import { invoke } from '@tauri-apps/api/core';
+import { useStore } from 'vuex';
+import { ElMessage } from 'element-plus';
+
+const store = useStore();
 const visible = defineModel<boolean>();
 const bg = ref<HTMLDivElement | null>(null);
 interface AddInfo {
@@ -116,11 +120,32 @@ function selectPreview() {
     })
 }
 
+function toggleVisible() {
+    visible.value = !visible.value
+}
+
 function handleAdd() {
     invoke("new_wallpaper", {
         info: addInfo.value
     }).then((res) => {
-        console.log(res);
+        if (res as string == "Success") {
+            addInfo.value = {
+                name: "",
+                preview: "",
+                media: "",
+                description: ""
+            }
+            store.commit("getWpList");
+            toggleVisible();
+            ElMessage({
+                type: "success",
+                message: "新建成功"
+            })
+        }
+        else ElMessage({
+            type: "error",
+            message: `新建失败 ${res}`
+        })
     })
 }
 </script>
@@ -137,7 +162,7 @@ function handleAdd() {
     transform: translate(-50%, 0);
     position: absolute;
     width: 85%;
-    height: calc(100% - 60px);
+    height: calc(100% - 55px);
     transition: .8s cubic-bezier(0.9, 0, 0, 1.1);
 }
 
@@ -152,7 +177,7 @@ function handleAdd() {
 }
 
 .item-add-main {
-    margin: 5px;
+    margin: 10px;
     height: calc(100% - 45px);
     overflow: auto;
 }

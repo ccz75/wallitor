@@ -42,7 +42,7 @@
                         </div>
                     </div>
                 </div>
-                <button class="apply-button">应用</button>
+                <button class="apply-button" @click="apply">应用</button>
             </div>
             <div class="apply-bar-close" @click="handleClose">
                 <svg-icon name="close" color="var(--text-color)"></svg-icon>
@@ -55,6 +55,7 @@
 import { defineProps, defineExpose, defineEmits, defineModel, watch, ref, type PropType } from 'vue';
 type Position = "left" | "right";
 import type { Info, Cell } from '@/ts/types'
+import { invoke } from '@tauri-apps/api/core';
 
 const props = defineProps({
     position: {
@@ -74,7 +75,8 @@ const cell = ref<Cell>({
         info: {
             description: "",
             created: 0,
-            type: "Video"
+            media_type: "Video",
+            entry_point: ""
         },
         option: {
             mute: true
@@ -102,6 +104,23 @@ function open(conFig: Cell) {
     cell.value = conFig;
     console.log(cell.value)
     visible.value = true;
+}
+
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+function apply() {
+    const webview = new WebviewWindow('wallitor_video_playback', {
+        title: "wallitor_video_playback",
+        url: `/video/?url=${cell.value.path}\\res\\${cell.value.config.info.entry_point}`,
+        fullscreen: true,
+        decorations: false
+    });
+    webview.once("tauri://created", () => {
+        invoke("set_wallpaper", {
+            title: "wallitor_video_playback"
+        }).then((res) => {
+            console.log(res)
+        })
+    });
 }
 </script>
 

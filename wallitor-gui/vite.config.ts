@@ -3,6 +3,7 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
+import ElementPlus from 'unplugin-element-plus/vite'
 import path from "path";
 import { createSvgIconsPlugin } from "vite-plugin-svg-icons";
 
@@ -22,7 +23,10 @@ export default defineConfig({
         path.resolve(__dirname, "src/assets/svgs"),
       ],
       symbolId: "icon-[name]"
-    })
+    }),
+    ElementPlus({
+      // options
+    }),
   ],
   resolve: {
     alias: {
