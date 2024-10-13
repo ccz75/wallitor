@@ -5,7 +5,7 @@ export interface wpConfig {
 }
 type WallpaperType = 'Video'
 export interface Info {
-  type: WallpaperType
+  media_type: WallpaperType
   description: string
   created: number
 }

@@ -74,7 +74,7 @@ async fn new_wallpaper(info:AddInfo) -> String{
   let base_url = String::from("./resource");
   let current_time:i64 = Local::now().timestamp();
   let folder = format!("{}/{}",base_url,current_time);
-  if fs::create_dir(Path::new(&folder)).is_err(){
+  if fs::create_dir_all(Path::new(&folder)).is_err(){
     return String::from("Error creating folder.");
   }
   if let Ok(false) = fs::exists(Path::new(&info.preview)){

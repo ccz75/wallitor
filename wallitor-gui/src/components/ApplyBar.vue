@@ -12,7 +12,7 @@
                         类型
                     </div>
                     <div class="apply-bar-info-main">
-                        {{ cell.config.info.type }}
+                        {{ cell.config.info.media_type }}
                     </div>
                 </div>
                 <div class="apply-bar-info rowbox">
@@ -28,7 +28,7 @@
                         创建时间
                     </div>
                     <div class="apply-bar-info-main">
-                        {{ (new Date(cell.config.info.created)).toLocaleString() }}
+                        {{ (new Date(cell.config.info.created * 1000)).toLocaleString() }}
                     </div>
                 </div>
                 <div class="apply-bar-info rowbox">
@@ -81,7 +81,7 @@ const cell = ref<Cell>({
         }
     }
 })
-const info_items = ref<(keyof Info)[]>(["type", "description", "created"]);
+const info_items = ref<(keyof Info)[]>(["media_type", "description", "created"]);
 const bg = ref<HTMLDivElement | null>(null);
 defineExpose({ open })
 watch(() => visible.value, (val, _) => {
