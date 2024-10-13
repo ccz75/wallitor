@@ -4,9 +4,45 @@
             'apply-bar-left': position == 'left',
             'apply-bar-right': position == 'right'
         }">
-            <div class="apply-bar-content">
-                <img :src="config.img">
-                {{ config.name }}
+            <div class="apply-bar-content rowbox">
+                <img :src="cell.img" class="apply-bar-img">
+                <div class="apply-bar-title">{{ cell.config.name }}</div>
+                <div class="apply-bar-info colbox" style="align-items: center;">
+                    <div class="apply-bar-info-tag">
+                        类型
+                    </div>
+                    <div class="apply-bar-info-main">
+                        {{ cell.config.info.type }}
+                    </div>
+                </div>
+                <div class="apply-bar-info rowbox">
+                    <div class="apply-bar-info-tag">
+                        描述
+                    </div>
+                    <div class="apply-bar-info-main">
+                        {{ cell.config.info.description }}
+                    </div>
+                </div>
+                <div class="apply-bar-info colbox" style="align-items: center;">
+                    <div class="apply-bar-info-tag">
+                        创建时间
+                    </div>
+                    <div class="apply-bar-info-main">
+                        {{ (new Date(cell.config.info.created)).toLocaleString() }}
+                    </div>
+                </div>
+                <div class="apply-bar-info rowbox">
+                    <div class="apply-bar-info-tag">
+                        设置
+                    </div>
+                    <div class="apply-bar-info-main">
+                        <div class="apply-bar-settings colbox">
+                            <div>静音</div>
+                            <div><input type="checkbox" v-model="cell.config.option.mute" /></div>
+                        </div>
+                    </div>
+                </div>
+                <button class="apply-bar-button">应用</button>
             </div>
             <div class="apply-bar-close" @click="handleClose">
                 <svg-icon name="close" color="var(--text-color)"></svg-icon>
@@ -18,10 +54,8 @@
 <script setup lang="ts">
 import { defineProps, defineExpose, defineEmits, defineModel, watch, ref, type PropType } from 'vue';
 type Position = "left" | "right";
-interface Config {
-    name: string,
-    img: string
-}
+import type { Info, Cell } from '@/ts/types'
+
 const props = defineProps({
     position: {
         type: String as PropType<Position>,
@@ -32,10 +66,22 @@ const props = defineProps({
 const visible = defineModel<boolean>();
 const emit = defineEmits(["submit"]);
 const visible_ = ref(false);
-const config = ref<Config>({
-    name: "",
-    img: ""
+const cell = ref<Cell>({
+    img: "",
+    path: "",
+    config: {
+        name: "",
+        info: {
+            description: "",
+            created: 0,
+            type: "Video"
+        },
+        option: {
+            mute: true
+        }
+    }
 })
+const info_items = ref<(keyof Info)[]>(["type", "description", "created"]);
 const bg = ref<HTMLDivElement | null>(null);
 defineExpose({ open })
 watch(() => visible.value, (val, _) => {
@@ -52,9 +98,9 @@ function handleClose() {
     visible.value = false;
 }
 
-function open(conFig: Config) {
-    config.value = conFig;
-    console.log(conFig)
+function open(conFig: Cell) {
+    cell.value = conFig;
+    console.log(cell.value)
     visible.value = true;
 }
 </script>
@@ -127,9 +173,16 @@ function open(conFig: Config) {
 }
 
 .apply-bar-content {
-    padding: 20px;
+    padding: 20px 15% 0 15%;
     height: calc(100% - 40px);
+    width: 70%;
     overflow: auto;
+    color: var(--text-color);
+}
+
+.apply-bar-img {
+    width: 100%;
+    border-radius: 7px;
 }
 
 .apply-bar-close {
@@ -148,5 +201,51 @@ function open(conFig: Config) {
 .apply-bar-right {
     right: 10px;
     animation: apply-bar-appear-right .6s cubic-bezier(0, 0.6, 0.2, 1.0);
+}
+
+.apply-bar-title {
+    font-size: 35px;
+    font-weight: 700;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.apply-bar-info-tag {
+    border-radius: 2px;
+    border: 1px solid var(--bd-color);
+    width: fit-content;
+    padding: 4px;
+    margin-top: 7px;
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 200;
+    margin-right: 5px;
+}
+
+.apply-bar-info-main {
+    font-size: 15px;
+    font-weight: 500;
+}
+
+.apply-bar-button {
+    align-self: flex-end;
+    outline: none;
+    border: solid 1px var(--bd-color);
+    border-radius: 2px;
+    width: 75px;
+    height: 30px;
+    background-color: var(--bg-color-alpha-darker);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: .3s;
+}
+
+.apply-bar-button:hover {
+    background-color: var(--bg-color-alter);
+}
+
+.apply-bar-button:active {
+    background-color: var(--bg-color-solid);
+    transform: scale(0.95);
 }
 </style>

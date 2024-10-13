@@ -1,10 +1,12 @@
 <template>
-    <div class="item-card">
-        <div class="item-card-main">
+    <div class="item-card" :style="{
+        backgroundImage: `url(${cell.img})`
+    }">
+        <!-- <div class="item-card-main">
             <img :src="config.img" />
-        </div>
+        </div> -->
         <div class="item-card-title">
-            {{ config.name }}
+            {{ cell.config.name }}
         </div>
     </div>
 </template>
@@ -12,15 +14,11 @@
 <script setup lang="ts">
 import { defineProps } from 'vue'
 import type { PropType } from 'vue'
-
-interface Config {
-    name: string,
-    img: string
-}
+import type { Cell } from '@/ts/types'
 
 const props = defineProps({
-    config: {
-        type: Object as PropType<Config>,
+    cell: {
+        type: Object as PropType<Cell>,
         required: true
     }
 })
@@ -43,6 +41,8 @@ const props = defineProps({
     transition: .3s;
     border-radius: 10px;
     box-shadow: 0 0 1px 6px transparent;
+    background-size: cover;
+    background-position: center;
 }
 
 .item-card-main {

@@ -16,6 +16,9 @@
                     <div>添加</div>
                 </div>
             </header>
+            <main>
+
+            </main>
         </div>
     </div>
 </template>

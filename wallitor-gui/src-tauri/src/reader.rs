@@ -1,7 +1,6 @@
 use std::fs;
 use std::path::Path;
 use serde::{ Serialize,Serializer};
-use serde_json;
 use std::collections::HashMap;
 
 enum FileType {
@@ -45,7 +44,7 @@ impl FileMap {
         Ok(files)
     }
     
-    fn read_resourse_directory(&mut self,p:&Path)->std::io::Result<()>{
+    pub fn read_resourse_directory(&mut self,p:&Path)->std::io::Result<()>{
         for entry in fs::read_dir(p)?{
             let dir = entry?;
             let path = dir.path();
