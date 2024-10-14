@@ -82,7 +82,7 @@ function toggleMaximize() {
 }
 
 function close() {
-  appWindow.close()
+  appWindow.hide();
 }
 </script>
 
@@ -124,6 +124,7 @@ function close() {
   backdrop-filter: blur(10px) saturate(180%);
   box-shadow: var(--shadow-edge-glow), var(--shadow);
   background-color: var(--bg-color-alpha);
+  z-index: 300;
 }
 
 .titlebar-button {

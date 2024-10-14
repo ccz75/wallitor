@@ -82,6 +82,13 @@ const addInfo = ref<AddInfo>({
 })
 const image_src = ref("");
 const support_ext = [".mp4", ".mkv", ".flv", ".ts"];
+const support_img_ext = [".jpg", ".png", ".gif", ".webp"];
+const support_img_ext_map: { [key in (typeof support_img_ext)[number]]: string } = {
+    '.jpg': 'image/jpeg',
+    '.png': 'image/png',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp'
+}
 
 defineExpose({ open })
 
@@ -99,7 +106,10 @@ function selectMedia() {
             let ext = file.substring(file.lastIndexOf("."));
             if (support_ext.includes(ext)) {
                 addInfo.value.media = file;
-            }
+            } else ElMessage({
+                type: "error",
+                message: "文件格式不受支持"
+            })
         }
     })
 }
@@ -107,14 +117,20 @@ function selectMedia() {
 function selectPreview() {
     handleFileOpen().then((file) => {
         if (file) {
-            addInfo.value.preview = file;
-            invoke("get_file", {
-                path: file
-            }).then((res) => {
-                let binary_data_arr = new Uint8Array(res as number[]);
-                const blob = new Blob([binary_data_arr], { type: 'image/jpeg' });
-                const imageUrl = URL.createObjectURL(blob);
-                image_src.value = imageUrl;
+            let ext = file.substring(file.lastIndexOf("."));
+            if (support_img_ext.includes(ext)) {
+                addInfo.value.preview = file;
+                invoke("get_file", {
+                    path: file
+                }).then((res) => {
+                    let binary_data_arr = new Uint8Array(res as number[]);
+                    const blob = new Blob([binary_data_arr], { type: support_img_ext_map[ext] });
+                    const imageUrl = URL.createObjectURL(blob);
+                    image_src.value = imageUrl;
+                })
+            } else ElMessage({
+                type: "error",
+                message: "文件格式不受支持"
             })
         }
     })
@@ -124,8 +140,13 @@ function toggleVisible() {
     visible.value = !visible.value
 }
 
+function checkInfo(info: AddInfo) {
+    if (!info.name || !info.media) return false
+    else return true;
+}
+
 function handleAdd() {
-    invoke("new_wallpaper", {
+    if (checkInfo(addInfo.value)) invoke("new_wallpaper", {
         info: addInfo.value
     }).then((res) => {
         if (res as string == "Success") {
@@ -135,6 +156,7 @@ function handleAdd() {
                 media: "",
                 description: ""
             }
+            image_src.value = "";
             store.commit("getWpList");
             toggleVisible();
             ElMessage({
@@ -146,6 +168,10 @@ function handleAdd() {
             type: "error",
             message: `新建失败 ${res}`
         })
+    })
+    else ElMessage({
+        type: "error",
+        message: "请填写名称并选择媒体文件"
     })
 }
 </script>

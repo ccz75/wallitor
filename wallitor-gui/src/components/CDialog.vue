@@ -65,7 +65,7 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 #mask {
-    z-index: 500;
+    z-index: 200;
     position: absolute;
     top: 0;
     left: 0;

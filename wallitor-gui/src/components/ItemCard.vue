@@ -1,7 +1,7 @@
 <template>
-    <div class="item-card" :style="{
-        backgroundImage: `url(${cell.img})`
-    }">
+    <div :style="{
+        backgroundImage: cell.img ? `url(${cell.img})` : 'linear-gradient(135deg, #00000020 0%, #FFFFFF20 100%)'
+    }" class="item-card">
         <!-- <div class="item-card-main">
             <img :src="config.img" />
         </div> -->
