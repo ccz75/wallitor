@@ -91,7 +91,7 @@ function close() {
   position: relative;
   justify-content: space-between;
   height: var(--titlebar-height);
-  padding: 5px;
+  padding: 4px;
   color: var(--text-color);
 }
 
@@ -114,7 +114,9 @@ function close() {
 }
 
 .titlebar-button-wrapper {
-  height: var(--titlebar-height);
+  height: calc(var(--titlebar-height) - 4px);
+  margin-top: 5px;
+  margin-right: 5px;
   width: fit-content;
   place-self: center;
   place-items: center;
@@ -128,15 +130,15 @@ function close() {
 }
 
 .titlebar-button {
-  height: calc(var(--titlebar-height) - 6px);
-  width: calc(var(--titlebar-height) - 6px);
+  height: 30px;
+  width: 30px;
   padding-top: 3px;
   padding-bottom: 3px;
 }
 
 .titlebar-button-rect {
-  height: 34px;
-  width: 34px;
+  height: 30px;
+  width: 30px;
   border-radius: 100%;
   transition: .3s;
   display: flex;

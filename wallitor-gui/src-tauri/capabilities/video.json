@@ -3,5 +3,5 @@
   "identifier": "video",
   "description": "Capability for the main window",
   "windows": ["wallitor_video_playback"],
-  "permissions": ["core:default", "shell:allow-open"]
+  "permissions": ["core:default", "shell:allow-open","core:window:allow-destroy"]
 }

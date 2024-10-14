@@ -48,7 +48,7 @@
                         </tr>
                         <tr>
                             <td></td>
-                            <td><button class="apply-button" @click="handleAdd">添加</button></td>
+                            <td><button class="apply-button" @click="handleAdd" ref="applyButton">添加</button></td>
                         </tr>
                     </tbody>
                 </table>
@@ -89,6 +89,7 @@ const support_img_ext_map: { [key in (typeof support_img_ext)[number]]: string }
     '.gif': 'image/gif',
     '.webp': 'image/webp'
 }
+const applyButton = ref<HTMLButtonElement | null>(null);
 
 defineExpose({ open })
 
@@ -146,33 +147,44 @@ function checkInfo(info: AddInfo) {
 }
 
 function handleAdd() {
-    if (checkInfo(addInfo.value)) invoke("new_wallpaper", {
-        info: addInfo.value
-    }).then((res) => {
-        if (res as string == "Success") {
-            addInfo.value = {
-                name: "",
-                preview: "",
-                media: "",
-                description: ""
-            }
-            image_src.value = "";
-            store.commit("getWpList");
-            toggleVisible();
+    if (checkInfo(addInfo.value)) {
+        if (applyButton.value) {
             ElMessage({
-                type: "success",
-                message: "新建成功"
+                type:"info",
+                message:"正在新建项目, 请勿重新点击或关闭程序"
+            })
+            applyButton.value.disabled = true;
+            invoke("new_wallpaper", {
+                info: addInfo.value
+            }).then((res) => {
+                if (applyButton.value) applyButton.value.disabled = false;
+                if (res as string == "Success") {
+                    addInfo.value = {
+                        name: "",
+                        preview: "",
+                        media: "",
+                        description: ""
+                    }
+                    image_src.value = "";
+                    store.commit("getWpList");
+                    toggleVisible();
+                    ElMessage({
+                        type: "success",
+                        message: "新建成功"
+                    })
+                }
+                else ElMessage({
+                    type: "error",
+                    message: `新建失败 ${res}`
+                })
             })
         }
-        else ElMessage({
-            type: "error",
-            message: `新建失败 ${res}`
-        })
-    })
+    }
     else ElMessage({
         type: "error",
         message: "请填写名称并选择媒体文件"
     })
+
 }
 </script>
 
@@ -256,7 +268,7 @@ function handleAdd() {
 }
 
 .item-add-preview:hover {
-    background: var(--bg-color-alpha-darker);
+    background: var(--bg-hover-fill);
 }
 
 .item-add-preview:active {
@@ -264,7 +276,7 @@ function handleAdd() {
 }
 
 .item-add-image {
-    background: linear-gradient(135deg, transparent 0%, #FFFFFF10 100%);
+    background: linear-gradient(135deg, #0000001A 0%, #FFFFFF1A 100%);
     border-radius: 5px;
     width: 400px;
     margin-bottom: 10px;

@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import TitleBar from './components/TitleBar.vue';
-import { RouterLink, RouterView } from 'vue-router'
-import { invoke } from "@tauri-apps/api"
+import { RouterView } from 'vue-router'
 
 const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)");
 const html_node = document.getElementsByTagName("html")[0]

@@ -54,9 +54,10 @@
 <script setup lang="ts">
 import { defineProps, defineExpose, defineEmits, defineModel, watch, ref, type PropType } from 'vue';
 type Position = "left" | "right";
-import type { Info, Cell } from '@/ts/types'
-import { invoke } from '@tauri-apps/api/core';
-
+import type { Cell } from '@/ts/types'
+import { useStore } from 'vuex';
+import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+const appWindow = getCurrentWebviewWindow();
 const props = defineProps({
     position: {
         type: String as PropType<Position>,
@@ -64,6 +65,7 @@ const props = defineProps({
     },
 
 })
+const store = useStore();
 const visible = defineModel<boolean>();
 const emit = defineEmits(["submit"]);
 const visible_ = ref(false);
@@ -83,7 +85,6 @@ const cell = ref<Cell>({
         }
     }
 })
-const info_items = ref<(keyof Info)[]>(["media_type", "description", "created"]);
 const bg = ref<HTMLDivElement | null>(null);
 defineExpose({ open })
 watch(() => visible.value, (val, _) => {
@@ -102,25 +103,15 @@ function handleClose() {
 
 function open(conFig: Cell) {
     cell.value = conFig;
-    console.log(cell.value)
     visible.value = true;
 }
 
-import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 function apply() {
-    const webview = new WebviewWindow('wallitor_video_playback', {
-        title: "wallitor_video_playback",
-        url: `/video/?url=${cell.value.path}\\res\\${cell.value.config.info.entry_point}`,
-        fullscreen: true,
-        decorations: false
-    });
-    webview.once("tauri://created", () => {
-        invoke("set_wallpaper", {
-            title: "wallitor_video_playback"
-        }).then((res) => {
-            console.log(res)
-        })
-    });
+    store.commit("apply_wallpaper",{
+        url:`/video/?url=${cell.value.path}\\res\\${cell.value.config.info.entry_point}&mute=${cell.value.config.option.mute}`,
+        title:"wallitor_video_playback"
+    })
+    appWindow.minimize();
 }
 </script>
 

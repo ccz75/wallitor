@@ -5,8 +5,6 @@ VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wallitor-core", "wallitor-core.vcxproj", "{36591862-6F9C-4A1D-BBAD-4B1CBB1EC24B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wallitor-cmd", "..\wallitor-cmd\wallitor-cmd.vcxproj", "{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,14 +21,6 @@ Global
 		{36591862-6F9C-4A1D-BBAD-4B1CBB1EC24B}.Release|x64.Build.0 = Release|x64
 		{36591862-6F9C-4A1D-BBAD-4B1CBB1EC24B}.Release|x86.ActiveCfg = Release|Win32
 		{36591862-6F9C-4A1D-BBAD-4B1CBB1EC24B}.Release|x86.Build.0 = Release|Win32
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Debug|x64.ActiveCfg = Debug|x64
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Debug|x64.Build.0 = Debug|x64
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Debug|x86.ActiveCfg = Debug|Win32
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Debug|x86.Build.0 = Debug|Win32
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Release|x64.ActiveCfg = Release|x64
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Release|x64.Build.0 = Release|x64
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Release|x86.ActiveCfg = Release|Win32
-		{5675A6E4-1AEF-4AA3-A366-0D975C311AAF}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

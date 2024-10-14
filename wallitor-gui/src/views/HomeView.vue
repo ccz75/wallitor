@@ -17,7 +17,22 @@ const apply_bar_visible = ref(false);
 const applyBar = ref<InstanceType<typeof ApplyBar> | null>(null);
 const item_add_visible = ref(false);
 const r_display = ref(false);
-const r_data = ref<Cell>();
+const r_data = ref<Cell>({
+    img: "",
+    path: "",
+    config: {
+        name: "",
+        info: {
+            description: "",
+            created: 0,
+            media_type: "Video",
+            entry_point: ""
+        },
+        option: {
+            mute: true
+        }
+    }
+});
 const menu = ref<InstanceType<typeof CRMenu> | null>(null);
 const options = ref<{ name: string, icon: string, handler: (data: Cell) => void }[]>([{
   name: "删除",
@@ -30,7 +45,6 @@ onMounted(() => {
 })
 
 function openCard(config: Cell) {
-  console.log(applyBar.value)
   if (applyBar.value) applyBar.value.open(config);
 }
 

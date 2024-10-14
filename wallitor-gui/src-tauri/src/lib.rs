@@ -7,7 +7,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{self, json};
 use std::ffi::CString;
 use std::path::Path;
-use std::{fs, path};
+use std::{fs};
 use tauri::ipc::Response;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
@@ -44,11 +44,9 @@ async fn read_resource_dir() -> String {
 #[tauri::command]
 async fn get_file(path: String) -> Response {
     let p = Path::new(&path);
-    if p.starts_with(".\\") {
-        if let Ok(true) = fs::exists(p) {
-            let data: Vec<u8> = fs::read(p).unwrap();
-            return tauri::ipc::Response::new(data);
-        }
+    if let Ok(true) = fs::exists(p) {
+        let data: Vec<u8> = fs::read(p).unwrap();
+        return tauri::ipc::Response::new(data);
     }
     tauri::ipc::Response::new(String::from(""))
 }

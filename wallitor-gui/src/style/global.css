@@ -14,17 +14,15 @@ html {
   --bg-color-alter: #ffffff;
   --bg-color: #ffffffae;
   --text-color: #1c1c1c;
-  --bd-color: #bbbbbbce;
+  --bd-color: #b2b2b2da;
   --text-active: #7cbeff;
-  --login-button-bg: #9acdff;
-  --login-button-bd: #c8c8c8;
-  --login-button-hover: #7db7f0;
-  --branch-viewing-color: rgb(122, 212, 215);
-  --branch-viewing-hover-color: rgb(102, 177, 180);
-  --delete-box-left-border: #f56c6c;
-  --delete-box-bg: #f56c6c42;
-  --delete-box-title: #511f1f;
-  --delete-box-text: black;
+  --titlebar-height: 40px;
+  --shadow-edge-glow: inset 1px 1px 1px -.5px rgba(255, 255, 255, .2), inset -1px -1px 1px -.5px rgba(255, 255, 255, .12), inset 0 0 4px rgba(255, 255, 255, .4);
+  --shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .06);
+  --bg-color-alpha: hsla(240, 17%, 91%, 0.68);
+  --bg-color-alpha-darker: hsla(0, 22%, 96%, 0.948);
+  --bg-hover-fill: rgba(172, 172, 193, 0.24);
+  --bg-hover-fill-close: rgba(239, 90, 90, 0.579);
 }
 
 html.dark {
@@ -133,7 +131,7 @@ textarea:focus {
 }
 
 .apply-button:hover {
-  background-color: var(--bg-color-alter);
+  background-color: var(--bg-hover-fill);
 }
 
 .apply-button:active {
