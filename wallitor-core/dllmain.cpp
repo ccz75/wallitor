@@ -20,12 +20,16 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 
 playerInstance* player_instance = NULL;
 
- extern "C" __declspec(dllexport) BOOL init(const char* ffpath,const char* videoPath, BOOL mute) {
+ extern "C" __declspec(dllexport) void init(const char* ffpath,const char* videoPath, BOOL mute) {
      player_instance = new playerInstance(conFig(ffpath, videoPath, mute));
-     return player_instance->generate();
+     player_instance->generate();
 }
 
  extern "C" __declspec(dllexport)  void destroy() {
      player_instance->exit();
      delete player_instance;
+ }
+
+ extern "C" __declspec(dllexport) BOOL set_wallpaper(const char* window_title) {
+     return set_as_wallpaper(window_title);
  }

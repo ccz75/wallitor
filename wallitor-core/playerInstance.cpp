@@ -1,7 +1,5 @@
 #include "pch.h"
 #include "playerInstance.h"
-#include <chrono>
-#include <thread>
 
 playerInstance::playerInstance(const conFig& config) {
 	this->config = config;
@@ -18,33 +16,6 @@ static BOOL CALLBACK EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM Lparam) {
 	return TRUE;
 }
 
-HWND findWindowTimeOut(const wchar_t* name, int timeoutMillis) {
-	auto start = std::chrono::steady_clock::now();
-	HWND hwnd = nullptr;
-
-	while (true) {
-		// 使用 FindWindowW 查找窗口
-		hwnd = FindWindowW(name, 0);
-
-		// 如果找到窗口，则返回
-		if (hwnd != nullptr) {
-			return hwnd;
-		}
-
-		// 计算当前经过的时间
-		auto now = std::chrono::steady_clock::now();
-		int elapsedMillis = std::chrono::duration_cast<std::chrono::milliseconds>(now - start).count();
-
-		// 如果超时，则返回 nullptr
-		if (elapsedMillis > timeoutMillis) {
-			return nullptr;
-		}
-
-		// 等待一段时间（例如100毫秒）再尝试查找
-		std::this_thread::sleep_for(std::chrono::milliseconds(100));
-	}
-}
-
 BOOL playerInstance::showWindow(LPCWSTR lpParameter) {
 	if (this->hFfplay != NULL) {
 		DWORD dwPID = 0;
@@ -54,20 +25,14 @@ BOOL playerInstance::showWindow(LPCWSTR lpParameter) {
 		system(strCmd);
 	}
 	STARTUPINFO si{ 0 };
-	//si.dwFlags = STARTF_USESHOWWINDOW;
-	//si.wShowWindow = SW_HIDE;
+	si.dwFlags = STARTF_USESHOWWINDOW;
+	si.wShowWindow = SW_HIDE;
 	PROCESS_INFORMATION pi{ 0 };
 	if (CreateProcess(this->config.ffpath.c_str(), (LPWSTR)lpParameter, 0, 0, 0, CREATE_NO_WINDOW, 0, 0, &si, &pi)) {
-		//Sleep(600);//等待视频播放器启动完成
-		//HWND hProgman = FindWindow(L"Progman", 0);// 找到PI窗口
-		HWND hProgman = findWindowTimeOut(L"Progman",2000);
-		std::this_thread::sleep_for(std::chrono::milliseconds(300));
-		if (hProgman == nullptr) return FALSE;
-		SendMessageTimeout(hProgman, 0x052c, 0, 0, 0, 300, 0);// 给它发特殊消息
-		//this->hFfplay = FindWindowW(L"SDL_app", 0);// 找到视频窗口
-		this->hFfplay = findWindowTimeOut(L"SDL_app", 2000);
-		std::this_thread::sleep_for(std::chrono::milliseconds(300));
-		if (this->hFfplay == nullptr) return FALSE;
+		Sleep(600);//等待视频播放器启动完成
+		HWND hProgman = FindWindow(L"Progman", 0);// 找到PI窗口
+		SendMessageTimeout(hProgman, 0x052c, 0, 0, 0, 100, 0);// 给它发特殊消息
+		this->hFfplay = FindWindowW(L"SDL_app", 0);// 找到视频窗口
 		SetParent(hFfplay, hProgman);// 将视频窗口设苦为PM的子窗口
 		int systemWidth = GetSystemMetrics(0);
 		int systemHeight = GetSystemMetrics(1);
@@ -84,8 +49,6 @@ BOOL playerInstance::showWindow(LPCWSTR lpParameter) {
 			MoveWindow(hFfplay, 0, x, cRct.right - cRct.left, cRct.bottom - cRct.top, 0);
 		}*/
 		EnumWindows(EnumWindowsProc, 0);// 找到第二个workerw窗口并隐藏它
-		CloseHandle(pi.hProcess);
-		CloseHandle(pi.hThread);
 		return TRUE;
 	}
 	CloseHandle(pi.hProcess);
@@ -93,7 +56,7 @@ BOOL playerInstance::showWindow(LPCWSTR lpParameter) {
 	return FALSE;
 }
 
-BOOL playerInstance::generate() {
+void playerInstance::generate() {
 	std::wstring fcmd = L" \"";
 	fcmd += this->config.videoPath + L"\"";
 	fcmd += L" -noborder -loop 0";
@@ -101,7 +64,7 @@ BOOL playerInstance::generate() {
 		fcmd += L" -an";
 	}
 	fcmd += L" -fs";
-	return this->showWindow(fcmd.c_str());
+	this->showWindow(fcmd.c_str());
 }
 
 void playerInstance::exit() {
@@ -112,4 +75,15 @@ void playerInstance::exit() {
 		sprintf_s(strCmd, "taskkill /pid %d -f", dwPID);
 		system(strCmd);
 	}
+}
+
+BOOL set_as_wallpaper(const char* window_title) {
+	HWND hProgman = FindWindow(L"Progman", 0);// 找到PI窗口
+	SendMessageTimeout(hProgman, 0x052c, 0, 0, 0, 100, 0);// 给它发特殊消息
+	std::string tmp = window_title;
+	HWND player = FindWindowW(0, std::wstring(tmp.begin(), tmp.end()).c_str());// 找到视频窗口
+	if (player == NULL) return FALSE;
+	SetParent(player, hProgman);// 将视频窗口设苦为PM的子窗口
+	EnumWindows(EnumWindowsProc, 0);// 找到第二个workerw窗口并隐藏它
+	return TRUE;
 }

@@ -9,7 +9,8 @@ private:
 public:
 	playerInstance(const conFig& config);
 	BOOL showWindow(LPCWSTR lpParameter);
-	BOOL generate();
+	void generate();
 	void exit();
 };
 
+BOOL set_as_wallpaper(const char* window_title);
