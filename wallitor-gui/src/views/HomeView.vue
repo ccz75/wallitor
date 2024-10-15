@@ -6,10 +6,12 @@ import { ref, onMounted, computed, nextTick } from 'vue';
 import CRMenu from '@/components/CRMenu.vue';
 import CRMenuCell from '@/components/CRMenuCell.vue';
 import SvgIcon from '@/components/SvgIcon.vue';
-import type { Cell } from '@/ts/types'
+import type { Cell, EditInfo } from '@/ts/types'
 import { useStore } from 'vuex';
 import { invoke } from '@tauri-apps/api/core';
 import { ElMessage } from 'element-plus';
+import CDialog from '@/components/CDialog.vue';
+import EditItem from '@/components/EditItem.vue';
 
 const store = useStore();
 const items = computed<Cell[]>(() => store.state.wpList);
@@ -18,27 +20,38 @@ const applyBar = ref<InstanceType<typeof ApplyBar> | null>(null);
 const item_add_visible = ref(false);
 const r_display = ref(false);
 const r_data = ref<Cell>({
-    img: "",
-    path: "",
-    config: {
-        name: "",
-        info: {
-            description: "",
-            created: 0,
-            media_type: "Video",
-            entry_point: ""
-        },
-        option: {
-            mute: true
-        }
+  img: "",
+  path: "",
+  config: {
+    name: "",
+    info: {
+      description: "",
+      created: 0,
+      media_type: "Video",
+      entry_point: ""
+    },
+    option: {
+      mute: true
     }
+  }
 });
 const menu = ref<InstanceType<typeof CRMenu> | null>(null);
 const options = ref<{ name: string, icon: string, handler: (data: Cell) => void }[]>([{
   name: "删除",
   icon: "delete",
   handler: del_wallpaper
+}, {
+  name: "修改",
+  icon: "edit",
+  handler: edit_wallpaper
 }])
+const edit_visible = ref(false);
+const edit_data = ref<EditInfo>({
+  path: "",
+  name: "",
+  preview: "",
+  description: "",
+});
 
 onMounted(() => {
   store.commit("getWpList");
@@ -73,6 +86,20 @@ function del_wallpaper(data: Cell) {
     })
   })
 }
+
+function edit_wallpaper(data: Cell) {
+  edit_visible.value = true;
+  edit_data.value = {
+    path: data.path,
+    name: data.config.name,
+    preview: data.img,
+    description: data.config.info.description
+  }
+}
+
+function handle_edit_close() {
+  edit_visible.value = false;
+}
 </script>
 
 <template>
@@ -92,6 +119,11 @@ function del_wallpaper(data: Cell) {
       </CRMenuCell>
     </template>
   </CRMenu>
+  <CDialog v-model:visible="edit_visible" height="80%" width="80%">
+    <template #content>
+      <EditItem v-model:data="edit_data" @submit="handle_edit_close"></EditItem>
+    </template>
+  </CDialog>
 </template>
 
 <style>

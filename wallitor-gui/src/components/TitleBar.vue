@@ -26,6 +26,11 @@
     </div>
     <template v-if="mode == 'win'">
       <div class="titlebar-button-wrapper colbox">
+        <div class="titlebar-button" id="titlebar-settings" @click="minimize">
+          <div class="titlebar-button-rect">
+            <svg-icon name="setting" :size="button_size_default"></svg-icon>
+          </div>
+        </div>
         <div class="titlebar-button" id="titlebar-minimize" @click="minimize">
           <div class="titlebar-button-rect">
             <svg-icon name="window-minimize" :size="button_size_default"></svg-icon>
@@ -146,7 +151,7 @@ function close() {
   justify-content: center;
 }
 
-#titlebar-minimize {
+#titlebar-settings {
   padding-left: 5px;
 }
 
@@ -154,6 +159,7 @@ function close() {
   padding-right: 5px;
 }
 
+#titlebar-settings .titlebar-button-rect:hover,
 #titlebar-minimize .titlebar-button-rect:hover,
 #titlebar-maximize .titlebar-button-rect:hover {
   background-color: var(--bg-hover-fill);

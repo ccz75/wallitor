@@ -5,9 +5,7 @@
                 <slot name="content"></slot>
             </div>
             <div id="close" @click="handleClose">
-                <el-icon :size="25">
-                    <Close />
-                </el-icon>
+                <SvgIcon name="window-close" size="25px"></SvgIcon>
             </div>
         </div>
     </div>
@@ -15,7 +13,7 @@
 
 <script lang="ts">
 import { defineComponent, nextTick } from 'vue'
-import "@/style/cui.scss"
+import "@/style/cui.css"
 
 export default defineComponent({
     name: "CDiaLog",
@@ -63,7 +61,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 #mask {
     z-index: 200;
     position: absolute;
@@ -71,8 +69,6 @@ export default defineComponent({
     left: 0;
     width: 100%;
     height: 100%;
-    backdrop-filter: blur(10px);
-    animation: cui-dialog-blur .6s;
 }
 
 #bg {
@@ -87,6 +83,7 @@ export default defineComponent({
     top: 50%;
     left: 50%;
     animation: cui-dialog-appear .6s cubic-bezier(0, 0.6, 0.2, 1.0);
+    box-shadow: var(--shadow-edge-glow), var(--shadow);
 }
 
 #content {

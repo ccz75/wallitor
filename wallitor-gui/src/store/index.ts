@@ -1,7 +1,7 @@
 import { createStore } from 'vuex'
 import { invoke } from '@tauri-apps/api/core'
 import type { ResourceDir, wpConfig, Cell } from '@/ts/types'
-import { WebviewWindow, } from '@tauri-apps/api/webviewWindow'
+import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
 
 function arrayBufferToString(buffer: ArrayBuffer): string {
   const decoder = new TextDecoder('utf-8')
@@ -73,21 +73,27 @@ export const store = createStore({
         }
       })
     },
-    apply_wallpaper(state, payload:{
-      title:string,
-      url:string
-    }) {
+    apply_wallpaper(
+      state,
+      payload: {
+        title: string
+        url: string
+      }
+    ) {
       const window_options = {
         title: payload.title,
         url: payload.url,
         fullscreen: true,
-        shadow:false,
+        shadow: false,
         decorations: false,
         transparent: true
       }
       if (state.videoWindow)
-        state.videoWindow.destroy().then((_) => {state.videoWindow = new WebviewWindow(payload.title, window_options)})
-      else state.videoWindow = new WebviewWindow(payload.title,window_options)
+        state.videoWindow.destroy().then((_) => {
+          state.videoWindow = new WebviewWindow(payload.title, window_options)
+        })
+      else state.videoWindow = new WebviewWindow(payload.title, window_options)
     }
-  }
+  },
+  actions: {}
 })

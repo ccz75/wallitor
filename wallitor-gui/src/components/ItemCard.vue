@@ -52,7 +52,6 @@ const props = defineProps({
 }
 
 .item-card:hover {
-    box-shadow: var(--shadow-edge-glow), var(--shadow);
     cursor: pointer;
     transform: scale(1.03);
     box-shadow: 0 0 2px 5px rgba(177, 177, 177, 0.151);
@@ -67,7 +66,7 @@ const props = defineProps({
 }
 
 .item-card:hover .item-card-title {
-    bottom: 0;
+    bottom: 5px;
 }
 
 .item-card-main img {
@@ -78,10 +77,11 @@ const props = defineProps({
 .item-card-title {
     position: absolute;
     bottom: -40px;
-    right: 5px;
+    right: 10px;
     transition: .3s;
     font-size: 30px;
     font-weight: 400;
     color: var(--text-color);
+    text-shadow: 1px 1px 2px var(--bg-color);
 }
 </style>

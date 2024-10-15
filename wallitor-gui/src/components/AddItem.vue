@@ -64,16 +64,12 @@ import { open } from '@tauri-apps/plugin-dialog';
 import { invoke } from '@tauri-apps/api/core';
 import { useStore } from 'vuex';
 import { ElMessage } from 'element-plus';
+import type { AddInfo } from '@/ts/types';
 
 const store = useStore();
 const visible = defineModel<boolean>();
 const bg = ref<HTMLDivElement | null>(null);
-interface AddInfo {
-    name: string,
-    preview: string,
-    media: string,
-    description: string
-}
+
 const addInfo = ref<AddInfo>({
     name: "",
     preview: "",
@@ -150,8 +146,8 @@ function handleAdd() {
     if (checkInfo(addInfo.value)) {
         if (applyButton.value) {
             ElMessage({
-                type:"info",
-                message:"正在新建项目, 请勿重新点击或关闭程序"
+                type: "info",
+                message: "正在新建项目, 请勿重新点击或关闭程序"
             })
             applyButton.value.disabled = true;
             invoke("new_wallpaper", {
@@ -189,6 +185,16 @@ function handleAdd() {
 </script>
 
 <style>
+@keyframes add-item-entry {
+    0% {
+        top: 100%;
+    }
+
+    100% {
+        top: calc(100% - 60px);
+    }
+}
+
 .item-add-bg {
     border: solid var(--bd-color) 1px;
     backdrop-filter: blur(30px) saturate(180%);
@@ -202,6 +208,7 @@ function handleAdd() {
     width: 85%;
     height: calc(100% - 55px);
     transition: .8s cubic-bezier(0.9, 0, 0, 1.1);
+    animation: add-item-entry .3s ease-in-out;
 }
 
 .item-add-show {
