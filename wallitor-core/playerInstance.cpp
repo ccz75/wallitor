@@ -87,3 +87,13 @@ BOOL set_as_wallpaper(const char* window_title) {
 	EnumWindows(EnumWindowsProc, 0);// 找到第二个workerw窗口并隐藏它
 	return TRUE;
 }
+
+static BOOL CALLBACK CheckMaximized(_In_ HWND hwnd, _In_ LPARAM Lparam) {
+	BOOL isMaximized = IsZoomed(hwnd);
+	if (isMaximized) return FALSE;
+	else return TRUE;
+}
+
+BOOL detectWindowMaximized() {
+	return EnumWindows(CheckMaximized, 0);
+}
