@@ -25,6 +25,10 @@ const props = defineProps({
 </script>
 
 <style>
+@keyframes item-card-entry{
+    0%{opacity: 0;transform: translateY(10px);}
+    100%{opacity: 1;transform: translateY(0px);}
+}
 :root {
     --item-card-size: 200px;
     --item-card-margin: 20px;
@@ -43,6 +47,7 @@ const props = defineProps({
     box-shadow: 0 0 1px 6px transparent;
     background-size: cover;
     background-position: center;
+    animation: item-card-entry 0.3s ease-out;
 }
 
 .item-card-main {

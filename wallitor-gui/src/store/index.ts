@@ -2,6 +2,7 @@ import { createStore } from 'vuex'
 import { invoke } from '@tauri-apps/api/core'
 import type { ResourceDir, wpConfig, Cell } from '@/ts/types'
 import { WebviewWindow } from '@tauri-apps/api/webviewWindow'
+import { emit } from '@tauri-apps/api/event'
 
 function arrayBufferToString(buffer: ArrayBuffer): string {
   const decoder = new TextDecoder('utf-8')
@@ -21,7 +22,7 @@ export const store = createStore({
   state() {
     return {
       wpList: [] as Cell[],
-      videoWindow: null as VideoWindow
+      videoWindow: null as VideoWindow,
     }
   },
   mutations: {
@@ -73,7 +74,7 @@ export const store = createStore({
         }
       })
     },
-    apply_wallpaper(
+    new_wallpaper_window(
       state,
       payload: {
         title: string
@@ -88,12 +89,29 @@ export const store = createStore({
         decorations: false,
         transparent: true
       }
-      if (state.videoWindow)
-        state.videoWindow.destroy().then((_) => {
-          state.videoWindow = new WebviewWindow(payload.title, window_options)
-        })
-      else state.videoWindow = new WebviewWindow(payload.title, window_options)
+      state.videoWindow = new WebviewWindow(payload.title, window_options);
     }
   },
-  actions: {}
+  actions: {
+    async apply_wallpaper(
+      { state,commit },
+      payload: {
+        title: string
+        url: string
+      }
+    ) {
+      return new Promise<boolean>((resolve)=>{
+        if (state.videoWindow){
+          state.videoWindow.destroy().then(() => {
+            commit('new_wallpaper_window', payload);
+            resolve(true)
+          })
+        }
+        else {
+          commit('new_wallpaper_window', payload)
+          resolve(true);
+        }
+      })
+    }
+  }
 })

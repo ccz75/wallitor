@@ -34,6 +34,6 @@ playerInstance* player_instance = NULL;
      return set_as_wallpaper(window_title);
  }
 
- extern "C" __declspec(dllexport) BOOL anyMaximized() {
+ extern "C" __declspec(dllexport) BOOL any_maximized() {
      return !detectWindowMaximized();
  }

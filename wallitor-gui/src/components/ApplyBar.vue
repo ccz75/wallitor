@@ -107,11 +107,10 @@ function open(conFig: Cell) {
 }
 
 function apply() {
-    store.commit("apply_wallpaper", {
+    store.dispatch("apply_wallpaper", {
         url: `/video/?url=${cell.value.path}\\res\\${cell.value.config.info.entry_point}&mute=${cell.value.config.option.mute}`,
         title: "wallitor_video_playback"
-    })
-    appWindow.minimize();
+    }).then(()=>appWindow.minimize())
 }
 </script>
 

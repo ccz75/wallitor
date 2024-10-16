@@ -1,6 +1,7 @@
 mod setup;
 mod handler;
 mod reader;
+extern crate lazy_static; 
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
@@ -15,6 +16,7 @@ pub fn run() {
             handler::wallpaper::new_wallpaper,
             handler::apply::set_wallpaper,
             handler::wallpaper::edit_wallpaper,
+            handler::apply::any_zoomed
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
