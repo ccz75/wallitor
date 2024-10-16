@@ -26,7 +26,7 @@
     </div>
     <template v-if="mode == 'win'">
       <div class="titlebar-button-wrapper colbox">
-        <div class="titlebar-button" id="titlebar-settings" @click="minimize">
+        <div class="titlebar-button" id="titlebar-settings" @click="openSettings">
           <div class="titlebar-button-rect">
             <svg-icon name="setting" :size="button_size_default"></svg-icon>
           </div>
@@ -63,7 +63,9 @@ import SvgIcon from '@/components/SvgIcon.vue';
 import { ref, defineProps } from 'vue'
 import type { PropType } from 'vue'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
+import { useRouter } from 'vue-router';
 const appWindow = getCurrentWebviewWindow();
+const router = useRouter();
 
 type Mode = "win" | "mac";
 
@@ -88,6 +90,10 @@ function toggleMaximize() {
 
 function close() {
   appWindow.hide();
+}
+
+function openSettings() {
+  router.push("settings");
 }
 </script>
 

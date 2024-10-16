@@ -51,6 +51,7 @@ const edit_data = ref<EditInfo>({
   name: "",
   preview: "",
   description: "",
+  mute: true
 });
 
 onMounted(() => {
@@ -93,7 +94,8 @@ function edit_wallpaper(data: Cell) {
     path: data.path,
     name: data.config.name,
     preview: data.img,
-    description: data.config.info.description
+    description: data.config.info.description,
+    mute: data.config.option.mute
   }
 }
 

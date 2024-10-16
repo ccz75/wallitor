@@ -13,14 +13,27 @@
                             <template v-if="image_src">
                                 <img :src="image_src" class="item-edit-image" @click="selectPreview">
                             </template>
-                            <template v-else>
+                            <template v-else-if="data.preview">
                                 <img :src="data.preview" class="item-edit-image" @click="selectPreview">
+                            </template>
+                            <template v-else>
+                                <div class="item-edit-preview" @click="selectPreview">
+                                    <div class="item-edit-preview-text">
+                                        <SvgIcon name="add" size="20px"></SvgIcon>点击添加封面
+                                    </div>
+                                </div>
                             </template>
                         </td>
                     </tr>
                     <tr>
                         <td class="item-edit-form-title">描述</td>
                         <td><textarea class="item-edit-description" v-model="data.description"></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="item-edit-form-title">静音</td>
+                        <td>
+                            <div><input type="checkbox" v-model="data.mute" /></div>
                         </td>
                     </tr>
                     <tr>
@@ -105,8 +118,9 @@ function handleEdit() {
             invoke("edit_wallpaper", {
                 info: info
             }).then((res) => {
+                console.log(info);
                 if (applyButton.value) applyButton.value.disabled = false;
-                if (res as string == "Success") {
+                if (res as boolean) {
                     store.commit("getWpList");
                     emit("submit");
                     ElMessage({

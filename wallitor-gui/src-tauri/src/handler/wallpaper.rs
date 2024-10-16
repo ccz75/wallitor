@@ -1,9 +1,8 @@
-use std::path::Path;
-use std::fs;
 use chrono::Local;
 use serde::{Deserialize, Serialize};
 use serde_json::{self, json};
-
+use std::fs;
+use std::path::Path;
 
 #[derive(Deserialize)]
 pub struct AddInfo {
@@ -13,7 +12,7 @@ pub struct AddInfo {
     description: String,
 }
 
-#[derive(Serialize,Deserialize)]
+#[derive(Serialize, Deserialize)]
 struct Info {
     media_type: String,
     description: String,
@@ -21,12 +20,12 @@ struct Info {
     entry_point: String,
 }
 
-#[derive(Serialize,Deserialize)]
+#[derive(Serialize, Deserialize)]
 struct Opt {
     mute: bool,
 }
 
-#[derive(Serialize,Deserialize)]
+#[derive(Serialize, Deserialize)]
 pub struct Config {
     name: String,
     info: Info,
@@ -102,9 +101,64 @@ pub struct EditInfo {
     name: String,
     preview: String,
     description: String,
+    mute: bool,
+}
+
+fn delete_preview(target_dir: &String) -> bool {
+    if let Ok(entries) = fs::read_dir(target_dir) {
+        for entry in entries {
+            if let Ok(entry) = entry {
+                let path = entry.path();
+                if let Some(file_name) = path.file_stem().and_then(|s| s.to_str()) {
+                    if file_name == "preview" {
+                        if fs::remove_file(path).is_err() {
+                            return false;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return true;
+}
+
+fn copy_preview(source_file: &String, target_dir: &String) -> bool {
+    let preview_path = Path::new(source_file);
+    if let Ok(true) = fs::exists(preview_path) {
+        if delete_preview(target_dir) {
+            if let Some(ext) = preview_path.extension().and_then(|f| f.to_str()) {
+                if fs::copy(
+                    preview_path,
+                    Path::new(&format!("{}/preview.{}", target_dir, ext)),
+                )
+                .is_ok()
+                {
+                    return true;
+                }
+            }
+        }
+    }
+    return false;
 }
 
 #[tauri::command]
-pub async fn edit_wallpaper(title: String) -> bool {
-    true
+pub async fn edit_wallpaper(info: EditInfo) -> bool {
+    let folder_path = Path::new(&info.path);
+    if let Ok(true) = fs::exists(folder_path) {
+        let config_path_str = format!("{}/config.json", info.path);
+        let config_path = Path::new(&config_path_str);
+        if let Ok(file) = fs::read(config_path) {
+            let mut config: Config = serde_json::from_slice(&file).unwrap();
+            config.info.description = info.description;
+            config.name = info.name;
+            config.option.mute = info.mute;
+            if let Ok(()) = fs::write(config_path, json!(config).to_string()) {
+                if !info.preview.is_empty() {
+                    return copy_preview(&info.preview, &info.path);
+                }
+                return true;
+            }
+        }
+    }
+    false
 }

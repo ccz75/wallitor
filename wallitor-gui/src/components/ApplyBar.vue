@@ -67,7 +67,7 @@ const props = defineProps({
 })
 const store = useStore();
 const visible = defineModel<boolean>();
-const emit = defineEmits(["submit"]);
+defineEmits(["submit"]);
 const visible_ = ref(false);
 const cell = ref<Cell>({
     img: "",
@@ -107,9 +107,9 @@ function open(conFig: Cell) {
 }
 
 function apply() {
-    store.commit("apply_wallpaper",{
-        url:`/video/?url=${cell.value.path}\\res\\${cell.value.config.info.entry_point}&mute=${cell.value.config.option.mute}`,
-        title:"wallitor_video_playback"
+    store.commit("apply_wallpaper", {
+        url: `/video/?url=${cell.value.path}\\res\\${cell.value.config.info.entry_point}&mute=${cell.value.config.option.mute}`,
+        title: "wallitor_video_playback"
     })
     appWindow.minimize();
 }
