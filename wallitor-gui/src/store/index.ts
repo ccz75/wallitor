@@ -23,6 +23,9 @@ export const store = createStore({
     return {
       wpList: [] as Cell[],
       videoWindow: null as VideoWindow,
+      settings:{
+        
+      }
     }
   },
   mutations: {

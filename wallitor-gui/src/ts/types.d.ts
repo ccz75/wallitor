@@ -44,3 +44,9 @@ interface EditInfo {
   description: string
   mute: boolean
 }
+
+export interface settings{
+  title_bar:"win"|"mac",
+  auto_start:boolean,
+  auto_pause:boolean
+}

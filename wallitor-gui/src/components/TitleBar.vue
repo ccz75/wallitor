@@ -1,45 +1,33 @@
 <template>
   <div data-tauri-drag-region class="titlebar colbox">
-    <template v-if="mode == 'mac'">
-      <div class="titlebar-button-wrapper colbox">
-        <div class="titlebar-button" id="titlebar-minimize" @click="minimize">
-          <svg-icon name="window-minimize" color="red"></svg-icon>
-        </div>
-        <div class="titlebar-button" id="titlebar-maximize" @click="toggleMaximize">
-          <template v-if="maximized">
-            <svg-icon name="window-maximized"></svg-icon>
-          </template>
-          <template v-else>
-            <svg-icon name="window-maximize" width="13px"></svg-icon>
-          </template>
-        </div>
-        <div class="titlebar-button" id="titlebar-close" @click="close">
-          <svg-icon name="window-close"></svg-icon>
-        </div>
-      </div>
-    </template>
     <div class="titlebar-icon-wrapper colbox">
+      <template v-if="mode == 'mac'">
+        <div class="titlebar-button titlebar-close button-style-mac" @click="close"></div>
+        <div class="titlebar-button titlebar-minimize button-style-mac" @click="minimize"></div>
+        <div class="titlebar-button titlebar-maximize button-style-mac" @click="toggleMaximize"></div> 
+    </template>
       <img src="@/assets/vw.png" class="titlebar-icon">
       <div class="titlebar-icon-title">
         Wallitor
       </div>
     </div>
-    <template v-if="mode == 'win'">
+    
       <div class="titlebar-button-wrapper colbox">
         <div class="titlebar-button" id="titlebar-settings" @click="openSettings">
           <div class="titlebar-button-rect">
             <svg-icon name="setting" :size="button_size_default"></svg-icon>
           </div>
         </div>
-        <div class="titlebar-button" id="titlebar-minimize" @click="minimize">
+        <template v-if="mode == 'win'">
+        <div class="titlebar-button titlebar-minimize button-style-win" @click="minimize">
           <div class="titlebar-button-rect">
             <svg-icon name="window-minimize" :size="button_size_default"></svg-icon>
           </div>
         </div>
-        <div class="titlebar-button" id="titlebar-maximize" @click="toggleMaximize">
+        <div class="titlebar-button titlebar-maximize button-style-win" @click="toggleMaximize">
           <template v-if="maximized">
             <div class="titlebar-button-rect">
-              <svg-icon name="window-maximized" :size="button_size_alter"></svg-icon>
+              <svg-icon name="window-maximized button-style-win" :size="button_size_alter"></svg-icon>
             </div>
           </template>
           <template v-else>
@@ -48,13 +36,13 @@
             </div>
           </template>
         </div>
-        <div class="titlebar-button" id="titlebar-close" @click="close">
+        <div class="titlebar-button titlebar-close button-style-win" @click="close">
           <div class="titlebar-button-rect">
             <svg-icon name="window-close" :size="button_size_default"></svg-icon>
           </div>
         </div>
+      </template>
       </div>
-    </template>
   </div>
 </template>
 
@@ -140,7 +128,7 @@ function openSettings() {
   z-index: 300;
 }
 
-.titlebar-button {
+.button-style-win.titlebar-button {
   height: 30px;
   width: 30px;
   padding-top: 3px;
@@ -157,21 +145,44 @@ function openSettings() {
   justify-content: center;
 }
 
-#titlebar-settings {
+#titlebar-settings{
+  cursor: pointer;
+}
+
+.button-style-win#titlebar-settings {
   padding-left: 5px;
 }
 
-#titlebar-close {
+.button-style-win.titlebar-close {
   padding-right: 5px;
 }
 
 #titlebar-settings .titlebar-button-rect:hover,
-#titlebar-minimize .titlebar-button-rect:hover,
-#titlebar-maximize .titlebar-button-rect:hover {
+.button-style-win.titlebar-minimize .titlebar-button-rect:hover,
+.button-style-win.titlebar-maximize .titlebar-button-rect:hover {
   background-color: var(--bg-hover-fill);
 }
 
-#titlebar-close .titlebar-button-rect:hover {
+.button-style-win.titlebar-close .titlebar-button-rect:hover {
   background-color: var(--bg-hover-fill-close);
+}
+
+
+.button-style-mac.titlebar-button{
+  width: 14px;
+  height: 14px;
+  border-radius: 100%;
+  margin-left: 6px;
+}
+
+.button-style-mac.titlebar-minimize {
+  background-color: red;
+}
+.button-style-mac.titlebar-maximize {
+  background-color: green;
+  margin-right: 6px;
+}
+.button-style-mac.titlebar-close {
+  background-color: yellow;
 }
 </style>

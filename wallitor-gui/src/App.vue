@@ -16,6 +16,6 @@ isDarkTheme.addEventListener('change', (event) => {
 </script>
 
 <template>
-  <title-bar mode="win"></title-bar>
+  <title-bar mode="mac"></title-bar>
   <router-view></router-view>
 </template>
