@@ -2,23 +2,29 @@
   <div data-tauri-drag-region class="titlebar colbox">
     <div class="titlebar-icon-wrapper colbox">
       <template v-if="mode == 'mac'">
-        <div class="titlebar-button titlebar-close button-style-mac" @click="close"></div>
-        <div class="titlebar-button titlebar-minimize button-style-mac" @click="minimize"></div>
-        <div class="titlebar-button titlebar-maximize button-style-mac" @click="toggleMaximize"></div> 
-    </template>
+        <div class="titlebar-button titlebar-close button-style-mac" @click="close">
+          <svg-icon name="window-close" :size="button_size_mac"></svg-icon>
+        </div>
+        <div class="titlebar-button titlebar-minimize button-style-mac" @click="minimize">
+          <svg-icon name="window-minimize" :size="button_size_mac"></svg-icon>
+        </div>
+        <div class="titlebar-button titlebar-maximize button-style-mac" @click="toggleMaximize">
+          <svg-icon name="window-maximize" :size="button_size_mac"></svg-icon>
+        </div>
+      </template>
       <img src="@/assets/vw.png" class="titlebar-icon">
       <div class="titlebar-icon-title">
         Wallitor
       </div>
     </div>
-    
-      <div class="titlebar-button-wrapper colbox">
-        <div class="titlebar-button" id="titlebar-settings" @click="openSettings">
-          <div class="titlebar-button-rect">
-            <svg-icon name="setting" :size="button_size_default"></svg-icon>
-          </div>
+
+    <div class="titlebar-button-wrapper colbox">
+      <div class="titlebar-button" id="titlebar-settings" @click="openSettings">
+        <div class="titlebar-button-rect">
+          <svg-icon name="setting" :size="button_size_default"></svg-icon>
         </div>
-        <template v-if="mode == 'win'">
+      </div>
+      <template v-if="mode == 'win'">
         <div class="titlebar-button titlebar-minimize button-style-win" @click="minimize">
           <div class="titlebar-button-rect">
             <svg-icon name="window-minimize" :size="button_size_default"></svg-icon>
@@ -27,7 +33,7 @@
         <div class="titlebar-button titlebar-maximize button-style-win" @click="toggleMaximize">
           <template v-if="maximized">
             <div class="titlebar-button-rect">
-              <svg-icon name="window-maximized button-style-win" :size="button_size_alter"></svg-icon>
+              <svg-icon name="window-maximized" :size="button_size_alter"></svg-icon>
             </div>
           </template>
           <template v-else>
@@ -42,7 +48,7 @@
           </div>
         </div>
       </template>
-      </div>
+    </div>
   </div>
 </template>
 
@@ -60,6 +66,8 @@ type Mode = "win" | "mac";
 const maximized = ref(false);
 const button_size_default = ref("18px");
 const button_size_alter = ref("15px")
+const button_size_mac = ref("11px")
+
 const props = defineProps({
   mode: {
     type: String as PropType<Mode>,
@@ -145,7 +153,7 @@ function openSettings() {
   justify-content: center;
 }
 
-#titlebar-settings{
+#titlebar-settings {
   cursor: pointer;
 }
 
@@ -168,21 +176,44 @@ function openSettings() {
 }
 
 
-.button-style-mac.titlebar-button{
-  width: 14px;
-  height: 14px;
+.button-style-mac.titlebar-button {
+  width: 13px;
+  height: 13px;
   border-radius: 100%;
   margin-left: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #000000b4
 }
 
 .button-style-mac.titlebar-minimize {
-  background-color: red;
+  background: #FFBB39;
+  border: 1px solid #CFA64E;
 }
+
 .button-style-mac.titlebar-maximize {
-  background-color: green;
-  margin-right: 6px;
+  background: #606060;
+  border: 1px solid #656565;
+  margin-right: 8px;
 }
+
+.button-style-mac:hover.titlebar-maximize {
+  background: #00CD4E;
+  border: 1px solid #0EA642;
+}
+
 .button-style-mac.titlebar-close {
-  background-color: yellow;
+  background: #FF5D5B;
+  border: 1px solid #CF544D;
+}
+
+.button-style-mac svg {
+  opacity: 0;
+  transition: .2s;
+}
+
+.button-style-mac:hover svg {
+  opacity: 1;
 }
 </style>

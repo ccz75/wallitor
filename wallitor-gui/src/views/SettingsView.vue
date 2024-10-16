@@ -1,30 +1,36 @@
 <template>
     <div class="settings-wrapper">
-        <div class="settings-back" @click="back_home">
+        <div class="settings-back colbox" @click="back_home">
             <SvgIcon name="direction-left"></SvgIcon>
-            返回
+            <div class="settings-back-text">返回</div>
         </div>
         <table class="settings-table">
             <tbody class="setting-table-body">
                 <tr>
-                    <td><div class="settings-label">
-                        <div class="settings-label-title">标题栏样式</div>
-                        <div class="settings-label-subtitle">选择选题栏关闭按钮样式</div>
-                    </div></td>
+                    <td>
+                        <div class="settings-label">
+                            <div class="settings-label-title">标题栏样式</div>
+                            <div class="settings-label-subtitle">选择选题栏关闭按钮样式</div>
+                        </div>
+                    </td>
                     <td><el-switch></el-switch></td>
                 </tr>
                 <tr>
-                    <td><div class="settings-label">
-                        <div class="settings-label-title">开机自启</div>
-                        <div class="settings-label-subtitle">开机自启</div>
-                    </div></td>
+                    <td>
+                        <div class="settings-label">
+                            <div class="settings-label-title">开机自启</div>
+                            <div class="settings-label-subtitle">开机自启</div>
+                        </div>
+                    </td>
                     <td><el-switch></el-switch></td>
                 </tr>
                 <tr>
-                    <td><div class="settings-label">
-                        <div class="settings-label-title">最大化自动暂停</div>
-                        <div class="settings-label-subtitle">最大化自动暂停</div>
-                    </div></td>
+                    <td>
+                        <div class="settings-label">
+                            <div class="settings-label-title">最大化自动暂停</div>
+                            <div class="settings-label-subtitle">最大化自动暂停</div>
+                        </div>
+                    </td>
                     <td><el-switch></el-switch></td>
                 </tr>
             </tbody>
@@ -40,9 +46,9 @@ import { onMounted } from 'vue';
 import SvgIcon from '@/components/SvgIcon.vue';
 const router = useRouter();
 
-onMounted(()=>{
+onMounted(() => {
     const table_body = document.querySelector(".setting-table-body") as HTMLElement;
-    entry("left",table_body,50);
+    entry("left", table_body, 50);
 })
 
 function back_home() {
@@ -51,14 +57,15 @@ function back_home() {
 </script>
 
 <style>
-.settings-wrapper{
-    padding-left:30px;
+.settings-wrapper {
+    padding-left: 30px;
     padding-right: 30px;
     width: calc(100% - 60px);
 }
-.settings-back{
+
+.settings-back {
     color: var(--text-color);
-    padding:8px;
+    padding: 8px;
     margin: 5px;
     width: fit-content;
     border-radius: 10px;
@@ -66,33 +73,41 @@ function back_home() {
     cursor: pointer;
 }
 
-.settings-back:hover{  
+.settings-back:hover {
     background-color: var(--bg-color-alter);
 }
 
-.settings-back:active{
+.settings-back:active {
     transform: scale(0.95);
 }
 
-.settings-table{
+.settings-table {
     width: calc(100% - 80px);
     margin-left: 40px;
     margin-right: 40px;
 }
-.settings-table td,th{
+
+.settings-table td,
+th {
     padding: 5px;
     color: var(--text-color);
 }
 
-.settings-label-title{
+.settings-label-title {
     margin-bottom: 3px;
     font-size: 20px;
     font-weight: 600;
 }
 
-.settings-label-subtitle{
+.settings-label-subtitle {
     font-size: 13px;
     font-weight: 300;
     margin-bottom: 10px;
+}
+
+.settings-back-text {
+    transform: translateY(-3px);
+    margin-left: 4px;
+    font-weight: 600;
 }
 </style>

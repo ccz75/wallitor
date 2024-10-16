@@ -1,6 +1,7 @@
 use crate::reader;
 use std::path::Path;
 use std::fs;
+use serde::{Deserialize, Serialize};
 use tauri::ipc::Response;
 
 #[tauri::command]
@@ -39,4 +40,17 @@ pub async fn del_folder(path: String) -> bool {
         }
     }
     false
+}
+
+#[derive(Serialize,Deserialize)]
+struct settings{
+    title_bar:String,
+    auto_start:bool,
+    auto_pause:bool
+  }
+  
+
+#[tauri::command]
+pub async fn get_config() -> String{
+    if let Ok()
 }
