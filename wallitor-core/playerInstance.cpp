@@ -6,12 +6,13 @@ playerInstance::playerInstance(const conFig& config) {
 	this->hFfplay = NULL;
 }
 
+HWND hWorkerw = NULL;
+
 static BOOL CALLBACK EnumWindowsProc(_In_ HWND hwnd, _In_ LPARAM Lparam) {
 	HWND hDefView = FindWindowEx(hwnd, 0, L"SHELLDLL_DefView", 0);
 	if (hDefView != 0) {
-		HWND hWorkerw = FindWindowEx(0, hwnd, L"WorkerW", 0);
-		ShowWindow(hWorkerw, SW_HIDE);
-		return FALSE;
+		hWorkerw = FindWindowEx(0, hwnd, L"WorkerW", 0);
+		return FALSE;		
 	}
 	return TRUE;
 }
@@ -77,15 +78,39 @@ void playerInstance::exit() {
 	}
 }
 
+BOOL try_find_worker(HWND hProgman,HWND hPlayer) {
+	HWND hWorkerW = FindWindowEx(hProgman, 0, L"WorkerW", 0);
+	if (hWorkerW != NULL) {
+		SetParent(hPlayer, hWorkerW);
+		return TRUE;
+	}
+	else return FALSE;
+}
+
+BOOL shell_in_progman(HWND hProgman) {
+	HWND hShell = FindWindowEx(hProgman, 0, L"SHELLDLL_DefView", 0);
+	if (hShell) return TRUE;
+	else return FALSE;
+}
+
 BOOL set_as_wallpaper(const char* window_title) {
 	HWND hProgman = FindWindow(L"Progman", 0);// 找到PI窗口
-	SendMessageTimeout(hProgman, 0x052c, 0, 0, 0, 100, 0);// 给它发特殊消息
+	SendMessageTimeout(hProgman, 0x052c, 0, 0, SMTO_NORMAL, 0x3e8, 0);// 给它发特殊消息
 	std::string tmp = window_title;
-	HWND player = FindWindowW(0, std::wstring(tmp.begin(), tmp.end()).c_str());// 找到视频窗口
-	if (player == NULL) return FALSE;
-	SetParent(player, hProgman);// 将视频窗口设苦为PM的子窗口
-	EnumWindows(EnumWindowsProc, 0);// 找到第二个workerw窗口并隐藏它
-	return TRUE;
+	HWND hPlayer = FindWindowW(0, std::wstring(tmp.begin(), tmp.end()).c_str());// 找到视频窗口
+	if (hPlayer == NULL) return FALSE;
+	if (shell_in_progman(hProgman)) {
+		return try_find_worker(hProgman, hPlayer);
+	}
+	else {
+		SetParent(hPlayer, hProgman);// 将视频窗口设苦为PM的子窗口
+		EnumWindows(EnumWindowsProc, 0);// 找到第二个workerw窗口并隐藏它
+		if (hWorkerw) {
+			ShowWindow(hWorkerw, SW_HIDE);
+			return TRUE;
+		}
+		return FALSE;
+	}
 }
 
 static BOOL CALLBACK CheckMaximized(_In_ HWND hwnd, _In_ LPARAM Lparam) {

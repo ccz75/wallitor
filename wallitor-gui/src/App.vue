@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { onBeforeMount } from 'vue';
 import TitleBar from './components/TitleBar.vue';
 import { RouterView } from 'vue-router'
+import { useStore } from 'vuex';
 
 const isDarkTheme = window.matchMedia("(prefers-color-scheme: dark)");
 const html_node = document.getElementsByTagName("html")[0]
@@ -13,9 +15,13 @@ isDarkTheme.addEventListener('change', (event) => {
   }
 });
 
+onBeforeMount(() => {
+  useStore().dispatch("get_settings");
+})
+
 </script>
 
 <template>
-  <title-bar mode="mac"></title-bar>
+  <title-bar></title-bar>
   <router-view></router-view>
 </template>

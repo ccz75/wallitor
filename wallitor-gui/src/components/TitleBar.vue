@@ -19,7 +19,9 @@
     </div>
 
     <div class="titlebar-button-wrapper colbox">
-      <div class="titlebar-button" id="titlebar-settings" @click="openSettings">
+      <div class="titlebar-button" id="titlebar-settings" :class="{
+        'button-style-win': mode == 'win'
+      }" @click="openSettings">
         <div class="titlebar-button-rect">
           <svg-icon name="setting" :size="button_size_default"></svg-icon>
         </div>
@@ -54,10 +56,11 @@
 
 <script setup lang="ts">
 import SvgIcon from '@/components/SvgIcon.vue';
-import { ref, defineProps } from 'vue'
-import type { PropType } from 'vue'
+import { onMounted, ref, computed } from 'vue'
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import type { Settings } from '@/ts/types';
 const appWindow = getCurrentWebviewWindow();
 const router = useRouter();
 
@@ -67,12 +70,12 @@ const maximized = ref(false);
 const button_size_default = ref("18px");
 const button_size_alter = ref("15px")
 const button_size_mac = ref("11px")
+const store = useStore();
+const settings = computed<Settings>(() => store.state.settings);
+const mode = computed<Mode>(() => settings.value.title_bar);
 
-const props = defineProps({
-  mode: {
-    type: String as PropType<Mode>,
-    default: "win"
-  }
+onMounted(() => {
+  console.log(mode);
 })
 
 function minimize() {

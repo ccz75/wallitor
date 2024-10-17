@@ -13,7 +13,12 @@
                             <div class="settings-label-subtitle">选择选题栏关闭按钮样式</div>
                         </div>
                     </td>
-                    <td><el-switch></el-switch></td>
+                    <td>
+                        <el-select @change="save" v-model="settings.title_bar">
+                            <el-option label="Windows" value="win"></el-option>
+                            <el-option label="OSX" value="mac"></el-option>
+                        </el-select>
+                    </td>
                 </tr>
                 <tr>
                     <td>
@@ -22,7 +27,7 @@
                             <div class="settings-label-subtitle">开机自启</div>
                         </div>
                     </td>
-                    <td><el-switch></el-switch></td>
+                    <td><el-switch @change="save" v-model="settings.auto_start"></el-switch></td>
                 </tr>
                 <tr>
                     <td>
@@ -31,7 +36,7 @@
                             <div class="settings-label-subtitle">最大化自动暂停</div>
                         </div>
                     </td>
-                    <td><el-switch></el-switch></td>
+                    <td><el-switch @change="save" v-model="settings.auto_pause"></el-switch></td>
                 </tr>
             </tbody>
         </table>
@@ -39,12 +44,16 @@
 </template>
 
 <script lang="ts" setup>
-import { ElForm, ElFormItem, ElSwitch, ElOption } from 'element-plus';
+import { ElSelect, ElSwitch, ElOption, ElMessage } from 'element-plus';
 import { entry } from '@/ts/entry';
 import { useRouter } from 'vue-router';
-import { onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { onMounted, ref } from 'vue';
 import SvgIcon from '@/components/SvgIcon.vue';
+import type { Settings } from '@/ts/types';
 const router = useRouter();
+const store = useStore();
+const settings = ref<Settings>(store.state.settings);
 
 onMounted(() => {
     const table_body = document.querySelector(".setting-table-body") as HTMLElement;
@@ -53,6 +62,21 @@ onMounted(() => {
 
 function back_home() {
     router.push("/")
+}
+
+function save() {
+    store.dispatch("set_settings", settings.value).then((status) => {
+        if (status as boolean) {
+            ElMessage({
+                type: "success",
+                message: "设置已更改"
+            })
+        }
+        else ElMessage({
+            type: "error",
+            message: "设置更改失败"
+        })
+    })
 }
 </script>
 

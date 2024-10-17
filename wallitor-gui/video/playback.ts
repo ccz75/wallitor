@@ -4,6 +4,7 @@ import { getCurrentWindow } from '@tauri-apps/api/window'
 interface Params {
   url?: string
   mute?: string
+  auto_pause?: string
 }
 function getSearchParamsAsObject() {
   const params = new URLSearchParams(window.location.search)
@@ -19,21 +20,21 @@ listen('video_pause', () => {
   if (player) player.pause()
 })
 
-class player{
-  playing:boolean
-  params:Params
-  interval:number
-  constructor(params:Params) {
-    this.params = params;
-    this.playing = false;
-    this.interval = 0;
+class player {
+  playing: boolean
+  params: Params
+  interval: number
+  constructor(params: Params) {
+    this.params = params
+    this.playing = false
+    this.interval = 0
   }
-  init_player(videoUrl:string){
+  init_player(videoUrl: string) {
     const player = document.getElementById('player') as HTMLVideoElement
     if (player) {
       player.src = videoUrl
       player.play()
-      this.playing = true;
+      this.playing = true
       if (this.params.mute) {
         player.muted = JSON.parse(this.params.mute)
       }
@@ -42,35 +43,43 @@ class player{
         player.style.opacity = '1'
       }, 0)
     }
-    this.detect_zoom();
+    if (this.params.auto_pause && this.params.auto_pause === 'true') {
+      this.detect_zoom()
+    }
   }
-  detect_zoom(){
-    setInterval(() => {
+  detect_zoom() {
+    this.clear_detection()
+    this.interval = window.setInterval(() => {
       invoke('any_zoomed').then((res) => {
         if (res as boolean) {
-          if(this.playing) {
+          if (this.playing) {
             const player = document.getElementById('player') as HTMLVideoElement
             if (player) {
-              player.pause();
-              this.playing = false;
+              player.pause()
+              this.playing = false
             }
           }
-        }
-        else{
-          if(!this.playing) {
+        } else {
+          if (!this.playing) {
             const player = document.getElementById('player') as HTMLVideoElement
             if (player) {
-              player.play();
-              this.playing = true;
+              player.play()
+              this.playing = true
             }
           }
         }
       })
     }, 1000)
   }
-} 
+  clear_detection() {
+    if (this.interval) {
+      clearInterval(this.interval)
+      this.interval = 0
+    }
+  }
+}
 
-let player_instance:player | null = null;
+let player_instance: player | null = null
 
 window.onload = () => {
   invoke('set_wallpaper', {
@@ -90,9 +99,17 @@ window.onload = () => {
         const binary_data_arr = new Uint8Array(res as number[])
         const blob = new Blob([binary_data_arr], { type: 'video/mp4' })
         const videoUrl = URL.createObjectURL(blob)
-        player_instance = new player(params);
-        player_instance.init_player(videoUrl);
+        player_instance = new player(params)
+        player_instance.init_player(videoUrl)
       })
     }
   })
 }
+
+listen('stop_auto_pause', () => {
+  if (player_instance) player_instance.clear_detection()
+})
+
+listen('start_auto_pause', () => {
+  if (player_instance) player_instance.detect_zoom()
+})

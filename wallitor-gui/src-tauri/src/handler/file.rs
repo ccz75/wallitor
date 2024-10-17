@@ -1,7 +1,8 @@
-use crate::reader;
-use std::path::Path;
-use std::fs;
+use crate::{reader, VERSION};
 use serde::{Deserialize, Serialize};
+use serde_json::json;
+use std::fs;
+use std::path::Path;
 use tauri::ipc::Response;
 
 #[tauri::command]
@@ -42,15 +43,45 @@ pub async fn del_folder(path: String) -> bool {
     false
 }
 
-#[derive(Serialize,Deserialize)]
-struct settings{
-    title_bar:String,
-    auto_start:bool,
-    auto_pause:bool
-  }
-  
+#[derive(Serialize, Deserialize)]
+pub struct Settings {
+    title_bar: String,
+    auto_start: bool,
+    auto_pause: bool,
+    version: String,
+}
+
+impl Settings {
+    fn new() -> Settings {
+        Settings {
+            title_bar: String::from("win"),
+            auto_start: false,
+            auto_pause: true,
+            version: String::from(VERSION),
+        }
+    }
+}
+
+static SETTING_PATH: &str = "./settings.json";
 
 #[tauri::command]
-pub async fn get_config() -> String{
-    if let Ok()
+pub async fn get_settings() -> String {
+    let setting_path = Path::new(SETTING_PATH);
+    if let Ok(file) = fs::read(setting_path) {
+        let mut settings: Settings = serde_json::from_slice(&file).unwrap();
+        settings.version = String::from(VERSION);
+        return json!(settings).to_string();
+    } else {
+        set_settings(Settings::new()).await;
+        return json!(Settings::new()).to_string();
+    }
+}
+
+#[tauri::command]
+pub async fn set_settings(settings: Settings) -> bool {
+    let setting_path = Path::new(SETTING_PATH);
+    if fs::write(setting_path, json!(settings).to_string()).is_ok() {
+        return true;
+    }
+    false
 }

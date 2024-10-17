@@ -52,9 +52,9 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineExpose, defineEmits, defineModel, watch, ref, type PropType } from 'vue';
+import { defineProps, defineExpose, defineEmits, defineModel, watch, ref, type PropType, computed } from 'vue';
 type Position = "left" | "right";
-import type { Cell } from '@/ts/types'
+import type { Cell, Settings } from '@/ts/types'
 import { useStore } from 'vuex';
 import { getCurrentWebviewWindow } from '@tauri-apps/api/webviewWindow';
 const appWindow = getCurrentWebviewWindow();
@@ -66,6 +66,7 @@ const props = defineProps({
 
 })
 const store = useStore();
+const settings = computed<Settings>(() => store.state.settings)
 const visible = defineModel<boolean>();
 defineEmits(["submit"]);
 const visible_ = ref(false);
@@ -87,7 +88,7 @@ const cell = ref<Cell>({
 })
 const bg = ref<HTMLDivElement | null>(null);
 defineExpose({ open })
-watch(() => visible.value, (val, _) => {
+watch(() => visible.value, (val) => {
     if (val) {
         visible_.value = true;
     }
@@ -107,10 +108,15 @@ function open(conFig: Cell) {
 }
 
 function apply() {
+    let params: { [key: string]: string } = {
+        url: `${cell.value.path}\\res\\${cell.value.config.info.entry_point}`,
+        mute: `${cell.value.config.option.mute}`,
+        auto_pause: `${settings.value.auto_pause}`
+    }
     store.dispatch("apply_wallpaper", {
-        url: `/video/?url=${cell.value.path}\\res\\${cell.value.config.info.entry_point}&mute=${cell.value.config.option.mute}`,
+        url: `/video/?${(new URLSearchParams(params)).toString()}`,
         title: "wallitor_video_playback"
-    }).then(()=>appWindow.minimize())
+    }).then(() => appWindow.minimize())
 }
 </script>
 
