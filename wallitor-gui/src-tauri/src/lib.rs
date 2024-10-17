@@ -13,8 +13,11 @@ pub fn run() {
         .setup(setup::init)
         .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
             let window = app.get_webview_window("main").expect("no main window");
-            if let Ok(true) =  window.is_minimized() {
+            if let Ok(true) = window.is_minimized() {
                 let _ = window.unminimize();
+            }
+            if let Ok(false) = window.is_visible() {
+                let _ = window.show();
             }
             let _ = window.set_focus();
         }))
