@@ -1,3 +1,4 @@
+use crate::handler::get_absolute_path;
 use crate::{reader, VERSION};
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -7,9 +8,9 @@ use tauri::ipc::Response;
 
 #[tauri::command]
 pub async fn get_file(path: String) -> Response {
-    let p = Path::new(&path);
-    if let Ok(true) = fs::exists(p) {
-        let data: Vec<u8> = fs::read(p).unwrap();
+    let p = get_absolute_path(&path);
+    if let Ok(true) = fs::exists(&p) {
+        let data: Vec<u8> = fs::read(&p).unwrap();
         return tauri::ipc::Response::new(data);
     }
     tauri::ipc::Response::new(String::from(""))
@@ -18,12 +19,12 @@ pub async fn get_file(path: String) -> Response {
 #[tauri::command]
 pub async fn read_resource_dir() -> String {
     let mut file_map = reader::FileMap::new();
-    let path = Path::new(".\\resource");
-    if let Ok(false) = fs::exists(path) {
-        fs::create_dir(path).expect("Can't create dir");
+    let path = get_absolute_path(&String::from(".\\resource"));
+    if let Ok(false) = fs::exists(&path) {
+        fs::create_dir(&path).expect("Can't create dir");
     }
     file_map
-        .read_resourse_directory(path)
+        .read_resourse_directory(&path)
         .expect("Can't read dir");
     serde_json::to_string(&file_map).unwrap()
 }
@@ -32,9 +33,10 @@ pub async fn read_resource_dir() -> String {
 pub async fn del_folder(path: String) -> bool {
     let p = Path::new(&path);
     if p.starts_with(".\\") {
-        if p.is_dir() {
-            if let Ok(true) = fs::exists(p) {
-                if fs::remove_dir_all(p).is_ok() {
+        let folder_path = get_absolute_path(&path);
+        if folder_path.is_dir() {
+            if let Ok(true) = fs::exists(&folder_path) {
+                if fs::remove_dir_all(&folder_path).is_ok() {
                     return true;
                 }
             }
@@ -66,7 +68,7 @@ static SETTING_PATH: &str = "./settings.json";
 
 #[tauri::command]
 pub async fn get_settings() -> String {
-    let setting_path = Path::new(SETTING_PATH);
+    let setting_path = get_absolute_path(&String::from(SETTING_PATH));
     if let Ok(file) = fs::read(setting_path) {
         let mut settings: Settings = serde_json::from_slice(&file).unwrap();
         settings.version = String::from(VERSION);
@@ -79,7 +81,7 @@ pub async fn get_settings() -> String {
 
 #[tauri::command]
 pub async fn set_settings(settings: Settings) -> bool {
-    let setting_path = Path::new(SETTING_PATH);
+    let setting_path = get_absolute_path(&String::from(SETTING_PATH));
     if fs::write(setting_path, json!(settings).to_string()).is_ok() {
         return true;
     }

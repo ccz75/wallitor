@@ -1,3 +1,4 @@
+use crate::handler::get_absolute_path;
 use chrono::Local;
 use serde::{Deserialize, Serialize};
 use serde_json::{self, json};
@@ -34,7 +35,8 @@ pub struct Config {
 
 #[tauri::command]
 pub async fn new_wallpaper(info: AddInfo) -> String {
-    let base_url = String::from("./resource");
+    let base_path = get_absolute_path(&String::from("./resource"));
+    let base_url = base_path.to_str().unwrap();
     let current_time: i64 = Local::now().timestamp();
     let folder = format!("{}/{}", base_url, current_time);
     if fs::create_dir_all(Path::new(&folder)).is_err() {
@@ -143,10 +145,10 @@ fn copy_preview(source_file: &String, target_dir: &String) -> bool {
 
 #[tauri::command]
 pub async fn edit_wallpaper(info: EditInfo) -> bool {
-    let folder_path = Path::new(&info.path);
+    let folder_path = &get_absolute_path(&info.path);
     if let Ok(true) = fs::exists(folder_path) {
         let config_path_str = format!("{}/config.json", info.path);
-        let config_path = Path::new(&config_path_str);
+        let config_path = &get_absolute_path(&config_path_str);
         if let Ok(file) = fs::read(config_path) {
             let mut config: Config = serde_json::from_slice(&file).unwrap();
             config.info.description = info.description;

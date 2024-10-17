@@ -2,6 +2,7 @@ mod handler;
 mod reader;
 mod setup;
 extern crate lazy_static;
+use tauri::Manager;
 use tauri_plugin_autostart::MacosLauncher;
 
 static VERSION: &str = "1.0.0";
@@ -10,11 +11,18 @@ static VERSION: &str = "1.0.0";
 pub fn run() {
     tauri::Builder::default()
         .setup(setup::init)
+        .plugin(tauri_plugin_single_instance::init(|app, _args, _cwd| {
+            let window = app.get_webview_window("main").expect("no main window");
+            if let Ok(true) =  window.is_minimized() {
+                let _ = window.unminimize();
+            }
+            let _ = window.set_focus();
+        }))
         .plugin(tauri_plugin_fs::init())
         .plugin(tauri_plugin_dialog::init())
         .plugin(tauri_plugin_autostart::init(
             MacosLauncher::LaunchAgent,
-            Some(vec!["--flag1", "--flag2"]),
+            None,
         ))
         .invoke_handler(tauri::generate_handler![
             handler::file::get_file,

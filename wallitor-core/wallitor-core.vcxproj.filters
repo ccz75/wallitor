@@ -24,9 +24,6 @@
     <ClInclude Include="playerInstance.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="conFig.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -36,9 +33,6 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="playerInstance.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="conFig.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
