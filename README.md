@@ -16,13 +16,13 @@ GUI is build with *tauri* and *vite+vue*, using *pnpm* as package manager.
 
 1. Install node packages.
 
-   ```
+   ```bash
    pnpm install 
    ```
 2. Build project
 
-   ```
-   pnpm tauri build
+   ```bash
+   pnpm tauri build --no-bundle
    ```
 
 ### Combination
@@ -31,7 +31,7 @@ Copy libracy and place in the same directory with executable file.
 
 ## Releases
 
-See [Release](https://github.com/RogerChen2005/wallitor/releases) 
+See [Release](https://github.com/RogerChen2005/wallitor/releases)
 
 ## Contributions
 
